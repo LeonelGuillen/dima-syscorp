@@ -394,7 +394,7 @@ function bmPanel(){
     +'if(!d||!d.length){alert(\'DIMA-PANEL: no hay cotizaciones en la tabla\');return;}'
     +'var fecha=new Date().toLocaleDateString(\'es-CR\',{timeZone:\'America/Costa_Rica\',day:\'2-digit\',month:\'2-digit\',year:\'numeric\'});'
     +'function cp(p){return(p||"").replace(/^P\\s*-\\s*/,"").replace(/^CL\\s*-\\s*/,"CL-").trim();}'
-    +'function pd(s){if(!s)return"";if(s.indexOf("Date(")>-1){var ms=parseInt(s.match(/\\d+/)[0]);return ms<0?"":new Date(ms).toLocaleDateString("es-CR",{timeZone:"America/Costa_Rica",day:"2-digit",month:"2-digit",year:"numeric"});}return s;}'
+    +'function pd(s){if(!s)return"";if(s.indexOf("Date(")>-1){var ms=parseInt(s.match(/-?\\d+/)[0]);return ms<=0?"":new Date(ms).toLocaleDateString("es-CR",{timeZone:"America/Costa_Rica",day:"2-digit",month:"2-digit",year:"numeric"});}return s;}'
     +'var rows=d.map(function(r){'
       +'var v=r.Vehicle||{};'
       +'return [fecha,"SYSCORP",r.Code||String(r.Id),r.strCompany||"",r.SinisterId||"",'
