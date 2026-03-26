@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SYSCORP · DIMA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0c0e12;--s1:#141720;--s2:#1a1e28;--s3:#232840;
+  --br:rgba(255,255,255,.07);--br2:rgba(255,255,255,.14);
+  --tx:#e8eaf0;--mu:#7a7f96;--hi:#3a3f5a;
+  --gr:#00d68f;--gr2:rgba(0,214,143,.13);--gr3:rgba(0,214,143,.06);
+  --bl:#4d8dff;--bl2:rgba(77,141,255,.13);
+  --am:#ffb830;--am2:rgba(255,184,48,.13);
+  --rd:#ff4d6a;--rd2:rgba(255,77,106,.13);
+  --pu:#b67cff;--pu2:rgba(182,124,255,.13);
+  --r:10px;--rm:7px;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;min-height:100vh;padding-bottom:32px}
+
+/* TOPBAR */
+.tb{background:linear-gradient(180deg,#161b27,#0c0e12);border-bottom:1px solid var(--br);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:40;backdrop-filter:blur(20px)}
+.tb-logo{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:1.5px;color:var(--gr)}
+.tb-sub{font-size:9px;color:var(--mu);letter-spacing:.8px;margin-top:2px;text-transform:uppercase}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--hi);flex-shrink:0}
+.dot.ok{background:var(--gr);box-shadow:0 0 7px var(--gr)}.dot.busy{background:var(--am);animation:pu 1.2s infinite}.dot.err{background:var(--rd)}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.2}}
+.tb-lbl{font-size:9px;color:var(--mu);font-family:var(--mono);letter-spacing:.5px}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--br);border-radius:var(--r);margin:10px 12px 0;overflow:hidden}
+.chdr{padding:8px 14px;border-bottom:1px solid var(--br);font-size:9px;font-weight:700;color:var(--mu);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono)}
+.badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.5px;font-family:var(--mono)}
+.bg{background:var(--gr2);color:var(--gr)}.bb{background:var(--bl2);color:var(--bl)}.ba{background:var(--am2);color:var(--am)}.br_{background:var(--rd2);color:var(--rd)}.bp{background:var(--pu2);color:var(--pu)}
+
+/* MÉTRICAS */
+.met{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--br)}
+.m{background:var(--s1);padding:11px 8px;text-align:center}
+.mv{font-size:19px;font-weight:700;line-height:1;font-family:var(--mono)}
+.mv.g{color:var(--gr)}.mv.b{color:var(--bl)}.mv.a{color:var(--am)}.mv.r{color:var(--rd)}
+.ml{font-size:8px;color:var(--mu);margin-top:3px;letter-spacing:.5px;text-transform:uppercase}
+.pgw{height:2px;background:var(--s3);margin:0 14px 5px}
+.pgb{height:100%;width:0;background:var(--gr);transition:width .4s;box-shadow:0 0 8px var(--gr)}
+.pgl{font-size:9px;color:var(--hi);padding:0 14px 9px;text-align:right;font-family:var(--mono)}
+
+/* BOTONES */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px}
+.btn{padding:12px 10px;border-radius:var(--rm);border:1px solid var(--br2);font-size:11px;font-weight:700;cursor:pointer;background:var(--s2);color:var(--tx);display:flex;align-items:center;justify-content:center;gap:6px;width:100%;-webkit-user-select:none;transition:all .15s;letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono)}
+.btn:active{transform:scale(.96);opacity:.7}.btn:disabled{opacity:.18;cursor:not-allowed}
+.btn.full{grid-column:1/-1}
+.btn.gr{background:var(--gr2);color:var(--gr);border-color:rgba(0,214,143,.4)}
+.btn.bl{background:var(--bl2);color:var(--bl);border-color:rgba(77,141,255,.4)}
+.btn.am{background:var(--am2);color:var(--am);border-color:rgba(255,184,48,.4)}
+.btn.rd{background:var(--rd2);color:var(--rd);border-color:rgba(255,77,106,.4)}
+.btn.pu{background:var(--pu2);color:var(--pu);border-color:rgba(182,124,255,.4)}
+
+/* CHIPS */
+.chips{display:flex;gap:6px;padding:9px 14px;flex-wrap:wrap}
+.chip{padding:5px 11px;border-radius:3px;font-size:9px;font-weight:700;border:1px solid var(--br2);color:var(--mu);cursor:pointer;transition:all .15s;letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono)}
+.chip.ext{background:var(--gr2);color:var(--gr);border-color:rgba(0,214,143,.4)}
+.chip.sub{background:var(--bl2);color:var(--bl);border-color:rgba(77,141,255,.4)}
+
+/* COTIZACIONES */
+.cot-item{padding:9px 14px;border-bottom:1px solid var(--br);display:flex;gap:9px;align-items:flex-start;cursor:pointer;transition:background .1s}
+.cot-item:active{background:var(--s2)}.cot-item:last-child{border-bottom:none}
+.cdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.cdot.open{background:var(--gr);box-shadow:0 0 6px var(--gr)}.cdot.part{background:var(--am)}.cdot.done{background:var(--hi)}
+.cbody{flex:1;min-width:0}
+.ccode{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--gr);letter-spacing:.8px}
+.ctitle{font-size:12px;font-weight:600;color:var(--tx);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmeta{font-size:9px;color:var(--mu);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
+.ctag{font-size:8px;font-weight:700;padding:1px 5px;border-radius:2px;font-family:var(--mono)}
+.ctag.p{background:var(--am2);color:var(--am)}.ctag.n{background:var(--gr2);color:var(--gr)}.ctag.r{background:var(--pu2);color:var(--pu)}
+.cright{text-align:right;flex-shrink:0}
+.cdate{font-size:9px;color:var(--mu);font-family:var(--mono)}
+.carrow{font-size:12px;color:var(--hi)}
+.empty{padding:20px 14px;text-align:center;color:var(--hi);font-size:11px;font-family:var(--mono)}
+
+/* LOG */
+.logw{max-height:220px;overflow-y:auto;padding:9px 14px;-webkit-overflow-scrolling:touch}
+.logw::-webkit-scrollbar{width:2px}.logw::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px}
+.ll{display:flex;gap:5px;align-items:flex-start;padding:1px 0;font-family:var(--mono);font-size:10px}
+.lt{color:var(--hi);min-width:44px;flex-shrink:0;padding-top:1px;font-size:9px}
+.tag{font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;min-width:28px;text-align:center;flex-shrink:0;letter-spacing:.3px}
+.tok{background:var(--gr2);color:var(--gr)}.tinf{background:var(--bl2);color:var(--bl)}.twn{background:var(--am2);color:var(--am)}.ter{background:var(--rd2);color:var(--rd)}
+.lm{color:var(--tx);word-break:break-all;line-height:1.5;font-size:10px}
+
+/* INFO GRID */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.ir{padding:8px 14px;border-bottom:1px solid var(--br);display:flex;flex-direction:column;gap:2px}
+.ir:nth-child(odd){border-right:1px solid var(--br)}.ir:nth-last-child(1),.ir:nth-last-child(2){border-bottom:none}
+.ik{font-size:8px;color:var(--mu);letter-spacing:.6px;text-transform:uppercase;font-family:var(--mono)}.iv{font-size:12px;font-weight:600;font-family:var(--mono);color:var(--tx)}
+.iv.g{color:var(--gr)}.iv.a{color:var(--am)}
+
+/* MODAL */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:60;align-items:flex-end;justify-content:center}
+.ov.open{display:flex}
+.sh{background:var(--s1);border-radius:var(--r) var(--r) 0 0;border:1px solid var(--br);border-bottom:none;width:100%;max-width:520px;padding:18px 16px 34px;max-height:90vh;overflow-y:auto}
+.sh h3{font-size:13px;font-weight:700;margin-bottom:4px;font-family:var(--mono);color:var(--gr);letter-spacing:.8px;text-transform:uppercase}
+.sh p{font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.65}
+.sh2{display:flex;gap:8px}.sh2 .btn{flex:1}
+.steps{display:flex;flex-direction:column;gap:0;margin-bottom:12px}
+.step{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--br)}.step:last-child{border-bottom:none}
+.sn{width:18px;height:18px;border-radius:2px;background:var(--bl2);color:var(--bl);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)}
+.st{font-size:11px;color:var(--mu);flex:1;line-height:1.55}.st b{color:var(--tx)}.st code{color:var(--gr);font-family:var(--mono);font-size:9px;background:var(--gr3);padding:1px 4px;border-radius:2px}
+
+/* BM CODE */
+.bmcode{background:var(--bg);border:1px solid var(--br2);border-radius:var(--rm);padding:10px 12px;font-family:var(--mono);font-size:9px;color:var(--gr);white-space:pre-wrap;word-break:break-all;max-height:80px;overflow:hidden;margin-bottom:8px;-webkit-user-select:all;user-select:all}
+</style>
+</head>
+<body>
+
+<div class="tb">
+  <div><div class="tb-logo">SYSCORP</div><div class="tb-sub">DIMA Parts · Cotizaciones</div></div>
+  <div class="tb-right"><span class="tb-lbl" id="slbl"></span><div class="dot" id="dot"></div></div>
+</div>
+
+<!-- MÉTRICAS -->
+<div class="card">
+  <div class="met">
+    <div class="m"><div class="mv g" id="me">0</div><div class="ml">Extraídas</div></div>
+    <div class="m"><div class="mv b" id="ms">0</div><div class="ml">Subidas</div></div>
+    <div class="m"><div class="mv a" id="merr">0</div><div class="ml">Errores</div></div>
+    <div class="m"><div class="mv" id="mi">0</div><div class="ml">Índice</div></div>
+  </div>
+  <div class="pgw"><div class="pgb" id="pb"></div></div>
+  <div class="pgl" id="pl">—</div>
+</div>
+
+<!-- OPERACIÓN -->
+<div class="card">
+  <div class="chdr">Operación <span class="badge bg" id="mbadge">EXTRAER</span></div>
+  <div class="chips">
+    <div class="chip ext" id="ch-ext" onclick="setOp('ext')">◀ Extraer</div>
+    <div class="chip" id="ch-sub" onclick="setOp('sub')">▶ Subir precios</div>
+  </div>
+  <div class="g2" style="padding:0 10px 10px">
+    <button class="btn gr full" id="btn-run" onclick="doRun()">▶ EJECUTAR</button>
+    <button class="btn" onclick="doScan()">⟳ SCAN PANEL</button>
+    <button class="btn am" onclick="showBM()">⚙ BOOKMARKLETS</button>
+  </div>
+</div>
+
+<!-- ACCIONES -->
+<div class="card">
+  <div class="chdr">Acciones</div>
+  <div class="g2">
+    <button class="btn" onclick="doStatus()">≡ ESTADO</button>
+    <button class="btn rd" onclick="document.getElementById('ov-rst').classList.add('open')">⌫ RESET</button>
+    <button class="btn gr full" onclick="openSysCorpPanel()">↗ ABRIR SYSCORP PANEL</button>
+    <button class="btn bl full" onclick="openSheet('W')">↗ SHEET COTIZACIONES</button>
+    <button class="btn pu full" onclick="openSheet('R')">↗ SHEET SUBIR</button>
+  </div>
+</div>
+
+<!-- RECIENTES -->
+<div class="card">
+  <div class="chdr">Recientes <span class="badge" id="recbadge" style="background:var(--s3);color:var(--mu)">0</span></div>
+  <div id="cot-list"><div class="empty">⬡ Ejecutá SCAN PANEL o el bookmarklet de panel</div></div>
+</div>
+
+<!-- COLA -->
+<div class="card">
+  <div class="chdr">Cola pendiente <span class="badge ba" id="qb" style="display:none">0</span></div>
+  <div id="queue-list" style="padding:9px 14px;font-size:10px;color:var(--mu);font-family:var(--mono)">Vacía</div>
+</div>
+
+<!-- ÍNDICE -->
+<div class="card">
+  <div class="chdr">Índice local</div>
+  <div class="ig">
+    <div class="ir"><span class="ik">Procesados</span><span class="iv g" id="kc">0</span></div>
+    <div class="ir"><span class="ik">Estado</span><span class="iv" id="ke">—</span></div>
+    <div class="ir" style="grid-column:1/-1;border-right:none"><span class="ik">Última sync</span><span class="iv" id="ks">—</span></div>
+  </div>
+</div>
+
+<!-- LOG -->
+<div class="card" style="margin-bottom:12px">
+  <div class="chdr">Log <span style="color:var(--hi);cursor:pointer;font-weight:400" onclick="limpiarLog()">limpiar</span></div>
+  <div class="logw" id="log"></div>
+</div>
+
+<!-- MODAL RESET -->
+<div class="ov" id="ov-rst">
+  <div class="sh">
+    <h3>Resetear índice</h3>
+    <p>Se borra el índice local. La próxima extracción procesará todas las cotizaciones.</p>
+    <div class="sh2">
+      <button class="btn" onclick="document.getElementById('ov-rst').classList.remove('open')">Cancelar</button>
+      <button class="btn rd" onclick="doReset();document.getElementById('ov-rst').classList.remove('open')">Borrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TSV -->
+<div class="ov" id="ov-tsv">
+  <div class="sh">
+    <h3 id="tsv-tit">TSV copiado</h3>
+    <p id="tsv-desc">Abrí la Sheet y pegá con Ctrl+V o toque largo → Pegar.</p>
+    <div class="sh2">
+      <button class="btn gr" onclick="openSheet('W');document.getElementById('ov-tsv').classList.remove('open')">Abrir Sheet</button>
+      <button class="btn" onclick="document.getElementById('ov-tsv').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BOOKMARKLETS -->
+<div class="ov" id="ov-bm">
+  <div class="sh">
+    <h3>Bookmarklets DIMA</h3>
+    <p>Dos bookmarklets para usar desde SysCorp en Chrome. Guardá cada uno en Favoritos con su URL <code style="font-family:var(--mono);color:var(--gr);font-size:9px">javascript:...</code>.</p>
+
+    <div style="font-size:10px;font-weight:700;color:var(--am);font-family:var(--mono);letter-spacing:.8px;margin-bottom:6px">① DIMA-PANEL — en /Cotizaciones/Panel</div>
+    <div class="bmcode" id="bm-panel">Generando…</div>
+    <button class="btn am full" style="margin-bottom:14px" onclick="copiarBM('panel')">Copiar código PANEL</button>
+
+    <div style="font-size:10px;font-weight:700;color:var(--bl);font-family:var(--mono);letter-spacing:.8px;margin-bottom:6px">② DIMA-DETALLE — en /Cotizaciones/Aplicar</div>
+    <div class="bmcode" id="bm-detalle">Generando…</div>
+    <button class="btn bl full" style="margin-bottom:14px" onclick="copiarBM('det')">Copiar código DETALLE</button>
+
+    <div class="steps" style="margin-bottom:14px">
+      <div class="step"><div class="sn">1</div><div class="st">Copiá el código del bookmarklet que necesitás.</div></div>
+      <div class="step"><div class="sn">2</div><div class="st">En Chrome: tocá ☆ en la barra de URL para guardar la página como favorito. Editá el favorito y pegá el código copiado en el campo URL. Guardá con nombre <b>DIMA-PANEL</b> o <b>DIMA-DETALLE</b>.</div></div>
+      <div class="step"><div class="sn">3</div><div class="st"><b>Para extraer del panel:</b> Abrí SysCorp → Panel → tocá favorito <code>DIMA-PANEL</code> → volvé acá → <code>SCAN PANEL</code>.</div></div>
+      <div class="step"><div class="sn">4</div><div class="st"><b>Para extraer partes:</b> Abrí una cotización en SysCorp → tocá favorito <code>DIMA-DETALLE</code> → volvé acá → <code>SCAN PANEL</code>.</div></div>
+    </div>
+
+    <div class="sh2">
+      <button class="btn gr full" onclick="document.getElementById('ov-bm').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ CONFIG ══ */
+const C={
+  BASE:'https://syscorpla.com',
+  PANEL:'/Cotizaciones/Panel',
+  APPLY:'/Cotizaciones/Aplicar',
+  SW:'1Ygc9G6WsBnEylo-P-rvrO-l3dctIUy6B9jMc_JDBLug',
+  SR:'1J84a1R-ciIJXeF3BIS5joUWU2grGfbHtP7y6UA6MdJg',
+  MAX_E:10, MAX_S:5, LS:'syscorp_processed', LS_MAX:300,
+  // Cols Sheet SUBIR (0-based): C=2 código, N=13 parte, S=18 precio, T=19 días, U=20 desc, V=21 disp, W=22 obs
+  SC:{SOL:2,COD:13,PRECIO:18,DIAS:19,DESC:20,DISP:21,OBS:22}
+};
+
+/* ══ ESTADO ══ */
+const S={busy:false,ext:0,sub:0,err:0,idx:new Set(),queue:[],op:'ext',recs:[]};
+
+/* ══ UI ══ */
+function $(id){return document.getElementById(id);}
+function log(t,m){
+  const el=$('log'),d=document.createElement('div');
+  d.className='ll';
+  d.innerHTML=`<span class="lt">${new Date().toTimeString().slice(0,8)}</span>`+
+    `<span class="tag t${t}">${t.toUpperCase()}</span>`+
+    `<span class="lm">${String(m).replace(/</g,'&lt;')}</span>`;
+  el.appendChild(d);el.scrollTop=el.scrollHeight;
+}
+function limpiarLog(){$('log').innerHTML='';log('inf','Log limpiado');}
+function dot(s,l){
+  $('dot').className='dot'+(s==='ok'?' ok':s==='busy'?' busy':s==='err'?' err':'');
+  $('slbl').textContent=l||'';
+}
+function prog(p,l){$('pb').style.width=p+'%';$('pl').textContent=l;}
+function ui(){
+  $('me').textContent=S.ext;$('ms').textContent=S.sub;$('merr').textContent=S.err;$('mi').textContent=S.idx.size;
+  $('kc').textContent=S.idx.size;
+  const qb=$('qb');
+  if(S.queue.length){qb.textContent=S.queue.length;qb.style.display='';}else{qb.style.display='none';}
+  renderQueue();
+}
+function setOp(op){
+  S.op=op;
+  $('ch-ext').className='chip'+(op==='ext'?' ext':'');
+  $('ch-sub').className='chip'+(op==='sub'?' sub':'');
+  $('mbadge').textContent=op==='ext'?'EXTRAER':'SUBIR';
+  $('mbadge').className='badge '+(op==='ext'?'bg':'bb');
+}
+function openSheet(t){try{window.open('https://docs.google.com/spreadsheets/d/'+(t==='W'?C.SW:C.SR),'_blank');}catch(e){}}
+function openSysCorpPanel(){try{window.open(C.BASE+C.PANEL,'_blank');}catch(e){}}
+
+/* ══ ÍNDICE LOCAL ══ */
+function guardarIdx(){
+  const now=new Date().toLocaleString('es-CR',{timeZone:'America/Costa_Rica'});
+  const ids=[...S.idx].slice(-C.LS_MAX);S.idx=new Set(ids);
+  try{localStorage.setItem(C.LS,JSON.stringify({ids,sync:now}));}catch(e){}
+  $('ks').textContent=now;$('ke').textContent='OK';
+}
+function cargarIdx(){
+  try{
+    const r=localStorage.getItem(C.LS);
+    if(r){const p=JSON.parse(r);S.idx=new Set(p.ids||[]);$('ks').textContent=p.sync||'—';$('ke').textContent='OK';log('inf',`Índice: ${S.idx.size} IDs`);}
+    else{log('wrn','Sin índice — primer uso');$('ke').textContent='Primera vez';}
+  }catch(e){log('err','cargarIdx: '+e.message);}
+  ui();
+}
+function doReset(){
+  try{localStorage.removeItem(C.LS);}catch(e){}
+  S.idx=new Set();S.queue=[];S.ext=0;S.sub=0;S.err=0;S.recs=[];
+  $('ks').textContent='—';$('ke').textContent='Reseteado';
+  prog(0,'—');dot('','Reseteado');ui();renderCots([]);
+  log('wrn','Índice borrado. Próxima extracción: todo desde cero.');
+}
+
+/* ══ RENDER ══ */
+function renderCots(cots){
+  const el=$('cot-list');
+  $('recbadge').textContent=cots.length;
+  $('recbadge').style.cssText=cots.length?'background:var(--gr2);color:var(--gr)':'background:var(--s3);color:var(--mu)';
+  if(!cots.length){el.innerHTML='<div class="empty">⬡ Sin cotizaciones</div>';return;}
+  el.innerHTML=cots.map(function(c){
+    const yaProc=S.idx.has(String(c.Id));
+    const part=c.TakingPart==='SI';
+    const reab=(c.Code||'').includes('Reabierto')||c.isReabierto;
+    const dc=part?'part':yaProc?'done':'open';
+    const placa=(c.LicensePlate||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-');
+    const v=c.Vehicle||{};
+    return '<div class="cot-item" onclick="openCot('+c.Id+','+c.CompanyId+')">'
+      +'<div class="cdot '+dc+'"></div>'
+      +'<div class="cbody">'
+        +'<div style="display:flex;align-items:center;gap:5px">'
+          +'<span class="ccode">'+(c.Code||String(c.Id))+'</span>'
+          +(part?'<span class="ctag p">PART.</span>':'')
+          +(!yaProc&&!part?'<span class="ctag n">NUEVA</span>':'')
+          +(reab?'<span class="ctag r">REABIERTO</span>':'')
+        +'</div>'
+        +'<div class="ctitle">'+placa+' · '+(v.Brand||'')+' '+(v.Model||'')+' '+(v.Year||'')+'</div>'
+        +'<div class="cmeta"><span>'+(c.strCompany||'')+'</span><span>'+(c.SinisterId?'Caso:'+c.SinisterId:'')+'</span><span>'+(c.ItemsQty||0)+' partes</span></div>'
+      +'</div>'
+      +'<div class="cright"><div class="cdate">'+(c.EndDate||'')+'</div><div class="carrow">›</div></div>'
+    +'</div>';
+  }).join('');
+}
+function openCot(id,cid){try{window.open(C.BASE+C.APPLY+'?q='+id+'&c='+cid,'_blank');}catch(e){}}
+function renderQueue(){
+  const el=$('queue-list');
+  if(!S.queue.length){el.innerHTML='<span style="color:var(--hi);font-family:var(--mono);font-size:10px">Vacía</span>';return;}
+  el.innerHTML=S.queue.map(function(id){return'<div style="padding:4px 0;font-size:10px;font-family:var(--mono);color:var(--mu)">'+id+'</div>';}).join('');
+}
+function doStatus(){
+  log('inf','── ESTADO ──');
+  log('inf','Op:'+S.op.toUpperCase()+' Ext:'+S.ext+' Sub:'+S.sub+' Err:'+S.err);
+  log('inf','Índice:'+S.idx.size+' Cola:'+S.queue.length+' Recs:'+S.recs.length);
+  if(S.queue.length)log('wrn','Cola:'+S.queue.slice(0,5).join(','+(S.queue.length>5?'…':'')));
+}
+
+/* ══ CLIPBOARD ══ */
+function copiarTexto(txt){
+  if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(txt).then(function(){return true;}).catch(function(){return copiarFB(txt);});
+  return Promise.resolve(copiarFB(txt));
+}
+function copiarFB(txt){
+  try{var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:50%;left:50%;width:2px;height:2px;opacity:.01;font-size:12px';document.body.appendChild(ta);ta.focus();ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}
+}
+function fetchT(url,opts,ms){
+  ms=ms||12000;var ctrl=new AbortController();var tid=setTimeout(function(){ctrl.abort();},ms);
+  var o=Object.assign({},opts||{},{signal:ctrl.signal});
+  return fetch(url,o).finally(function(){clearTimeout(tid);});
+}
+
+/* ══ PARSEAR TSV DEL BOOKMARKLET ══ */
+function parseTSV(txt){
+  var lines=txt.trim().split('\n'),cots=[];
+  for(var i=0;i<lines.length;i++){
+    var c=lines[i].split('\t');
+    if(c.length<3)continue;
+    // Formato generado: col[1]='SYSCORP', col[25]=ID|CompanyId (metadatos)
+    if(c[1]==='SYSCORP'){
+      var meta=(c[25]||'').split('|');
+      var id=meta[0]||c[2];
+      var cid=parseInt(meta[1])||0;
+      cots.push({Id:id,CompanyId:cid,Code:c[2],strCompany:c[3]||'',SinisterId:c[4]||'',
+        LicensePlate:c[5]||'',Vehicle:{Brand:c[6]||'',Model:c[7]||'',Year:c[8]||'',VIN:c[9]||''},
+        StartDate:c[10]||'',EndDate:c[11]||'',TakingPart:'NO',
+        _row:c  // fila completa para reutilizar en TSV de Sheet
+      });
+    }
+  }
+  return cots;
+}
+
+/* ══ BOOKMARKLETS ══ */
+function bmPanel(){
+  // Validado en vivo: usa $('#tbRecently').bootstrapTable('getData'), col Z = ID|CompanyId
+  var code='(function(){'
+    +'var d=$(\'#tbRecently\').bootstrapTable(\'getData\');'
+    +'if(!d||!d.length){alert(\'DIMA-PANEL: no hay cotizaciones en la tabla\');return;}'
+    +'var fecha=new Date().toLocaleDateString(\'es-CR\',{timeZone:\'America/Costa_Rica\',day:\'2-digit\',month:\'2-digit\',year:\'numeric\'});'
+    +'function cp(p){return(p||"").replace(/^P\\s*-\\s*/,"").replace(/^CL\\s*-\\s*/,"CL-").trim();}'
+    +'function pd(s){if(!s)return"";if(s.indexOf("Date(")>-1){var ms=parseInt(s.match(/\\d+/)[0]);return ms<0?"":new Date(ms).toLocaleDateString("es-CR",{timeZone:"America/Costa_Rica",day:"2-digit",month:"2-digit",year:"numeric"});}return s;}'
+    +'var rows=d.map(function(r){'
+      +'var v=r.Vehicle||{};'
+      +'return [fecha,"SYSCORP",r.Code||String(r.Id),r.strCompany||"",r.SinisterId||"",'
+        +'cp(r.LicensePlate),v.Brand||"",v.Model||"",String(v.Year||""),v.VIN||r.VIN||"",'
+        +'r.StartDate||"",pd(r.CloseDate||""),(r.BodyShop&&r.BodyShop.Name)||"",'
+        +'"","","","","1","","","","","","","",String(r.Id)+"|"+String(r.CompanyId)];'
+    +'});'
+    +'var tsv=rows.map(function(r){return r.map(function(v){return(v==null?"":String(v)).replace(/[\\t\\r\\n]/g," ");}).join("\\t");}).join("\\n");'
+    +'var ta=document.createElement("textarea");ta.value=tsv;ta.style.cssText="position:fixed;top:0;left:0;width:2px;height:2px;opacity:.01;font-size:12px";'
+    +'document.body.appendChild(ta);ta.focus();ta.select();'
+    +'var ok=false;try{ok=document.execCommand("copy");}catch(e){}'
+    +'document.body.removeChild(ta);'
+    +'if(!ok&&navigator.clipboard)navigator.clipboard.writeText(tsv).catch(function(){});'
+    +'var div=document.createElement("div");'
+    +'div.style.cssText="position:fixed;bottom:20px;right:20px;z-index:99999;background:"+(ok?"#00d68f":"#ffb830")+";color:#0c0e12;padding:14px 18px;border-radius:8px;font-family:monospace;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;max-width:280px;text-align:center;";'
+    +'div.textContent=(ok?"✓ "+rows.length+" cots copiadas\\nVolvé a DIMA → SCAN PANEL":"⚠ "+rows.length+" cots\\nClipboard bloqueado - tocá para reintentar");'
+    +'div.onclick=function(){var ta2=document.createElement("textarea");ta2.value=tsv;ta2.style.cssText="position:fixed;top:0;left:0;width:2px;height:2px;opacity:.01;";document.body.appendChild(ta2);ta2.focus();ta2.select();document.execCommand("copy");document.body.removeChild(ta2);if(navigator.clipboard)navigator.clipboard.writeText(tsv).catch(function(){});};'
+    +'document.body.appendChild(div);'
+    +'setTimeout(function(){if(div.parentNode)div.parentNode.removeChild(div);},8000);'
+  +'})();';
+  return 'javascript:'+encodeURIComponent(code);
+}
+
+function bmDetalle(){
+  // Bookmarklet para /Aplicar — extrae partes de UNA cotización con datos del header
+  // Selectores validados: label nextElementSibling, tr[data-index], #dtPrice/#dtDays/#dtPercent/#slType/checkbox
+  var code='(function(){'
+    +'var rows=[...document.querySelectorAll("tr[data-index]")];'
+    +'if(!rows.length){alert("DIMA-DETALLE: no hay partes en esta cotización");return;}'
+    +'var url=new URL(location.href);'
+    +'var q=url.searchParams.get("q")||"";'
+    +'var c=url.searchParams.get("c")||"";'
+    +'var fecha=new Date().toLocaleDateString("es-CR",{timeZone:"America/Costa_Rica",day:"2-digit",month:"2-digit",year:"numeric"});'
+    // Leer datos del header via labels (validado: label.nextElementSibling)
+    +'function glabel(txt){var els=[...document.querySelectorAll("label")];var el=els.find(function(e){return e.innerText.trim().replace(/:| /g,"").toLowerCase()===txt.toLowerCase();});return el&&el.nextElementSibling?el.nextElementSibling.innerText.trim():""}'
+    +'var comp=glabel("Compañia")||glabel("Compania");'
+    +'var sol=glabel("Solicitud")||q;'
+    +'var taller=glabel("Taller");'
+    +'var vin=glabel("VIN");'
+    +'var placa=(glabel("Placa")||"").replace(/^P\\s*-\\s*/,"").replace(/^CL\\s*-\\s*/,"CL-").trim();'
+    +'var caso=glabel("Siniestro")||glabel("Caso");'
+    +'var marca=glabel("Marca");'
+    +'var modelo=glabel("Modelo");'
+    +'var anio=glabel("Año")||glabel("Ano");'
+    +'var qualMap={"":"NA","1":"ORIGINAL","2":"GENERICO","3":"USADO"};'
+    +'var tipoMap={"1":"Suministro","2":"Repuesto"};'
+    +'var data=rows.map(function(tr){'
+      +'var tds=[...tr.querySelectorAll("td")];'
+      +'var cod=tds[0]?tds[0].innerText.trim():"";'
+      // [BLOCKED] en desc → usar innerText del DOM directamente
+      +'var desc=tds[1]?tds[1].innerText.trim():"";'
+      +'var slT=tr.querySelector("#slType");'
+      +'var slQ=tr.querySelector("#slTypesQuotation");'
+      +'var dtP=tr.querySelector("#dtPrice");'
+      +'var dtD=tr.querySelector("#dtDays");'
+      +'var dtPc=tr.querySelector("#dtPercent");'
+      +'var cb=tr.querySelector("input[type=checkbox]");'
+      +'return [fecha,"SYSCORP",sol,comp,caso,placa,marca,modelo,anio,vin,'
+        +'"","",taller,'
+        +'cod,desc,slT?qualMap[slT.value]||"":"",slQ?tipoMap[slQ.value]||"":"","1",'
+        +'dtP?dtP.value:"",dtD?dtD.value:"",dtPc?dtPc.value:"",cb?(cb.checked?"SI":"NO"):"",'
+        +'"","","",q+"|"+c];'
+    +'});'
+    +'var tsv=data.map(function(r){return r.map(function(v){return(v==null?"":String(v)).replace(/[\\t\\r\\n]/g," ");}).join("\\t");}).join("\\n");'
+    +'var ta=document.createElement("textarea");ta.value=tsv;ta.style.cssText="position:fixed;top:0;left:0;width:2px;height:2px;opacity:.01;font-size:12px";'
+    +'document.body.appendChild(ta);ta.focus();ta.select();'
+    +'var ok=false;try{ok=document.execCommand("copy");}catch(e){}'
+    +'document.body.removeChild(ta);'
+    +'if(!ok&&navigator.clipboard)navigator.clipboard.writeText(tsv).catch(function(){});'
+    +'var div=document.createElement("div");'
+    +'div.style.cssText="position:fixed;bottom:20px;right:20px;z-index:99999;background:"+(ok?"#00d68f":"#ffb830")+";color:#0c0e12;padding:14px 18px;border-radius:8px;font-family:monospace;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;";'
+    +'div.textContent=(ok?"✓ "+data.length+" partes copiadas\\nVolvé a DIMA → SCAN PANEL":"⚠ "+data.length+" partes - clipboard bloqueado");'
+    +'document.body.appendChild(div);'
+    +'setTimeout(function(){if(div.parentNode)div.parentNode.removeChild(div);},6000);'
+  +'})();';
+  return 'javascript:'+encodeURIComponent(code);
+}
+
+function showBM(){
+  $('bm-panel').textContent=bmPanel();
+  $('bm-detalle').textContent=bmDetalle();
+  $('ov-bm').classList.add('open');
+}
+function copiarBM(tipo){
+  var bm=tipo==='panel'?bmPanel():bmDetalle();
+  copiarTexto(bm).then(function(ok){
+    if(ok)log('ok','Código '+(tipo==='panel'?'DIMA-PANEL':'DIMA-DETALLE')+' copiado — pegalo como URL del favorito');
+    else log('wrn','Copiá manualmente el código del bloque de texto del modal');
+  });
+}
+
+/* ══ SCAN PANEL — lee portapapeles (post-bookmarklet) ══ */
+async function doScan(){
+  log('inf','── SCAN PANEL ──');
+  try{
+    if(!navigator.clipboard) throw new Error('Clipboard API no disponible');
+    const txt=await navigator.clipboard.readText();
+    if(!txt.trim()||!txt.includes('SYSCORP')){
+      log('wrn','Portapapeles vacío o sin datos SYSCORP');
+      log('inf','Flujo: abrí SysCorp Panel → ejecutá favorito DIMA-PANEL → volvé acá → SCAN PANEL');
+      log('inf','Sin el bookmarklet: tocá BOOKMARKLETS para instalarlo primero');
+      dot('ok','Esperando bookmarklet'); prog(0,'Ejecutar DIMA-PANEL primero');
+      return;
+    }
+    const cots=parseTSV(txt);
+    if(!cots.length){log('wrn','No se reconocieron cotizaciones — revisá que ejecutaste DIMA-PANEL (no DIMA-DETALLE)');return;}
+    S.recs=cots;
+    renderCots(cots);
+    log('ok',cots.length+' cotizaciones cargadas desde portapapeles');
+    dot('ok','Panel escaneado'); prog(100,cots.length+' cotizaciones');
+  }catch(e){
+    log('err','Scan: '+e.message);
+    log('inf','TIP: el bookmarklet copia los datos al portapapeles automáticamente');
+    dot('ok','Usar bookmarklet'); prog(0,'—');
+  }
+}
+
+/* ══ LEER SHEET SUBIR (gviz/tq con cookies Google) ══ */
+async function leerSheetSubir(){
+  const url='https://docs.google.com/spreadsheets/d/'+C.SR+'/gviz/tq?tqx=out:json&headers=1';
+  const r=await fetchT(url,{credentials:'include'},12000);
+  if(!r.ok) throw new Error('HTTP '+r.status+' — ¿Estás logueado en Google?');
+  const txt=await r.text();
+  const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);\s*$/);
+  if(!m) throw new Error('Formato gviz inesperado');
+  const data=JSON.parse(m[1]);
+  const rows=data.table?.rows||[];
+  log('inf','Sheet SUBIR: '+rows.length+' filas totales');
+  const sc=C.SC;
+  return rows.map(function(row){
+    const c=row.c||[];
+    return {
+      sol:(c[sc.SOL]?.v||'').toString().trim(),
+      cod:(c[sc.COD]?.v||'').toString().trim(),
+      precio:(c[sc.PRECIO]?.v||'').toString().trim(),
+      dias:(c[sc.DIAS]?.v||'1').toString().trim()||'1',
+      desc:(c[sc.DESC]?.v||'0').toString().trim()||'0',
+      disp:(c[sc.DISP]?.v||'SI').toString().trim()||'SI',
+      obs:(c[sc.OBS]?.v||'').toString().trim()
+    };
+  }).filter(function(r){return r.sol&&r.cod&&r.precio;});
+}
+
+/* ══ SUBIR PRECIO A SYSCORP ══ */
+// Método batch validado en vivo en SysCorp
+function setBV(input, value){
+  const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
+  setter.call(input,value);
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+  input.dispatchEvent(new Event('change',{bubbles:true}));
+  input.dispatchEvent(new Event('blur',{bubbles:true})); // CRÍTICO en SysCorp
+}
+function setSel(sel,value){
+  const setter=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set;
+  setter.call(sel,value);
+  sel.dispatchEvent(new Event('change',{bubbles:true}));
+}
+
+async function subirEnVentana(row, companyId){
+  const win=window.open(
+    C.BASE+C.APPLY+'?q='+encodeURIComponent(row.sol)+'&c='+encodeURIComponent(companyId),
+    'sc_'+row.sol, 'width=900,height=700'
+  );
+  if(!win) throw new Error('Popup bloqueado — habilitá popups para syscorpla.com en Chrome');
+
+  // Esperar carga + validar URL
+  await new Promise(function(res,rej){
+    const t=setTimeout(function(){rej(new Error('Timeout'));},20000);
+    const iv=setInterval(function(){
+      try{
+        if(win.closed){clearInterval(iv);clearTimeout(t);rej(new Error('Ventana cerrada'));return;}
+        const url=win.location.href;
+        if(url.includes('/Finalizada')){clearInterval(iv);clearTimeout(t);win.close();rej(new Error('Finalizada — skip'));return;}
+        if(url.includes('/Aplicar')&&win.document.querySelectorAll('tr[data-index]').length>0){clearInterval(iv);clearTimeout(t);res();}
+      }catch(e){}
+    },400);
+  });
+
+  // Verificar timer — si 00 días y 00 horas y 00 mins → expirado
+  try{
+    const countEls=[...win.document.querySelectorAll('.countdown > span')];
+    if(countEls.length>=3){
+      const dias=parseInt(countEls[0]?.innerText||'1');
+      const horas=parseInt(countEls[2]?.innerText||'1');
+      const mins=parseInt(countEls[4]?.innerText||'1');
+      if(dias===0&&horas===0&&mins<=0){win.close();throw new Error('Timer expirado — skip');}
+    }
+  }catch(e){if(e.message.includes('skip'))throw e;}
+
+  // Buscar la fila por código de parte
+  const allRows=[...win.document.querySelectorAll('tr[data-index]')];
+  let tr=allRows.find(function(r){
+    const td=r.querySelector('td');
+    return td&&td.innerText.trim()===row.cod;
+  });
+  if(!tr){
+    log('wrn',row.sol+'/'+row.cod+': no encontrado por código → usando fila 0');
+    tr=allRows[0];
+  }
+  if(!tr){win.close();throw new Error('Sin filas en la cotización');}
+
+  // Setear campos con método batch validado
+  const dtP=tr.querySelector('#dtPrice');
+  const dtD=tr.querySelector('#dtDays');
+  const dtPc=tr.querySelector('#dtPercent');
+  const slT=tr.querySelector('#slType');
+  const cb=tr.querySelector('input[type="checkbox"]');
+
+  if(dtP)setBV(dtP,row.precio);
+  if(dtD)setBV(dtD,row.dias);
+  if(dtPc)setBV(dtPc,row.desc);
+  if(slT&&row.calidad)setSel(slT,row.calidad); // "1"=ORIG "2"=GEN "3"=USADO
+  if(cb){const shouldCheck=(row.disp||'SI').toUpperCase()==='SI';if(cb.checked!==shouldCheck)cb.click();}
+
+  await new Promise(function(r){setTimeout(r,350);});
+
+  // Click ACTUALIZAR (#cot-btn-Apply validado en vivo)
+  const btn=win.document.querySelector('#cot-btn-Apply');
+  if(!btn){win.close();throw new Error('Botón ACTUALIZAR no encontrado');}
+  btn.click();
+
+  // Esperar modal resultado
+  await new Promise(function(res,rej){
+    const t=setTimeout(function(){win.close();res('timeout');},8000);
+    const iv=setInterval(function(){
+      try{
+        const modal=win.document.querySelector('.modal.show,[class*="modal"][style*="block"]');
+        if(modal){
+          const txt=modal.innerText||'';
+          if(txt.toLowerCase().includes('error')){
+            // ERROR → cerrar con X, nunca con ACEPTAR
+            const x=modal.querySelector('.close,[data-dismiss="modal"],[aria-label="Close"]');
+            if(x)x.click();
+            clearInterval(iv);clearTimeout(t);win.close();
+            rej(new Error('Error SYSCORP: '+txt.slice(0,80)));
+          }else{
+            // ÉXITO → click ACEPTAR
+            const ok=modal.querySelector('.btn-primary,.btn-success,[id*="ok"],[id*="accept"],[id*="confirm"]');
+            if(ok)ok.click();
+            clearInterval(iv);clearTimeout(t);win.close();res('ok');
+          }
+        }
+        if(win.closed){clearInterval(iv);clearTimeout(t);res('closed');}
+      }catch(e){}
+    },300);
+  });
+  return true;
+}
+
+/* ══ EXTRAER ══ */
+async function doExtraer(){
+  S.busy=true;dot('busy','Extrayendo…');$('btn-run').disabled=true;
+  log('inf','── EXTRACCIÓN SYSCORP ──');prog(5,'Leyendo portapapeles…');
+  try{
+    if(!navigator.clipboard) throw new Error('Clipboard API no disponible');
+    const txt=await navigator.clipboard.readText();
+    if(!txt.trim()||!txt.includes('SYSCORP')){
+      log('wrn','Portapapeles vacío — ejecutá DIMA-PANEL en SysCorp primero');
+      log('inf','Pasos: 1) Abrí SysCorp Panel  2) Tocá favorito DIMA-PANEL  3) Volvé acá  4) EJECUTAR');
+      dot('ok','Esperando bookmarklet');prog(0,'Usar DIMA-PANEL primero');return;
+    }
+    prog(25,'Parseando TSV…');
+    const cots=parseTSV(txt);
+    if(!cots.length){log('err','No se reconocieron cotizaciones en el portapapeles');prog(0,'Error parse');return;}
+    log('ok',cots.length+' cotizaciones en portapapeles');
+    S.recs=cots;renderCots(cots);
+
+    // Filtrar nuevas (reabiertos siempre pasan)
+    let nuevas=cots.filter(function(c){
+      const id=String(c.Id);
+      if((c.Code||'').includes('Reabierto'))return true;
+      return !S.idx.has(id);
+    });
+    log('inf','Total:'+cots.length+' | Nuevas:'+nuevas.length+' | Ya procesadas:'+(cots.length-nuevas.length));
+    if(!nuevas.length){log('ok','Sin novedades — todo en el índice');prog(100,'Al día');dot('ok','Al día');return;}
+
+    if(nuevas.length>C.MAX_E){
+      S.queue=nuevas.slice(C.MAX_E).map(function(c){return String(c.Id);});
+      nuevas=nuevas.slice(0,C.MAX_E);
+      log('wrn','Límite '+C.MAX_E+': procesando '+nuevas.length+', quedan '+S.queue.length+' en cola');
+    }
+
+    prog(60,'Construyendo TSV ('+nuevas.length+' cotizaciones)…');
+    const fecha=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});
+    const rows=nuevas.map(function(c){
+      const r=c._row||[];
+      // Si tenemos la fila original del bookmarklet, la usamos (ya tiene todos los campos)
+      if(r.length>=25&&r[1]==='SYSCORP'){
+        // Remover la col Z (metadata) para el Sheet
+        return r.slice(0,25).concat(['']); // 26 cols
+      }
+      // Fallback: construir la fila
+      const v=c.Vehicle||{};
+      const placa=(c.LicensePlate||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-');
+      return [fecha,'SYSCORP',c.Code||String(c.Id),c.strCompany||'',c.SinisterId||'',
+        placa,v.Brand||'',v.Model||'',String(v.Year||''),v.VIN||c.vin||'',
+        c.StartDate||'',c.EndDate||'',(c.BodyShop&&c.BodyShop.Name)||'',
+        '','','','','1','','','','','','','',''];
+    });
+
+    const tsv=rows.map(function(r){return r.slice(0,26).map(function(v){return(v==null?'':String(v)).replace(/[\t\r\n]/g,' ');}).join('\t');}).join('\n');
+    nuevas.forEach(function(c){S.idx.add(String(c.Id));});
+    S.ext+=nuevas.length;
+    prog(85,'Copiando TSV…');
+    const ok=await copiarTexto(tsv);
+    guardarIdx();
+    $('tsv-tit').textContent=ok?'✓ TSV COPIADO':'TSV GENERADO';
+    $('tsv-desc').textContent=ok
+      ?(nuevas.length+' cotizaciones, '+rows.length+' filas. Abrí Sheet → primera celda vacía → Ctrl+V o toque largo → Pegar.')
+      :(rows.length+' filas. Clipboard bloqueado — copiá manualmente desde el área de texto.');
+    $('ov-tsv').classList.add('open');
+    prog(100,rows.length+' filas listas');dot('ok',S.ext+' extraídas');ui();
+    if(S.queue.length)log('wrn','⚠ Quedan '+S.queue.length+' en cola → ejecutá de nuevo');
+  }catch(e){
+    S.err++;log('err','Extracción: '+e.message);dot('err','Error');prog(0,'Error');ui();
+  }finally{
+    S.busy=false;$('btn-run').disabled=false;
+  }
+}
+
+/* ══ SUBIR ══ */
+async function doSubir(){
+  S.busy=true;dot('busy','Subiendo…');$('btn-run').disabled=true;
+  log('inf','── SUBIDA SYSCORP ──');prog(5,'Leyendo Sheet SUBIR…');
+  try{
+    let filas;
+    try{filas=await leerSheetSubir();}
+    catch(e){
+      log('err','Sheet SUBIR: '+e.message);
+      log('inf','TIP: abrí la Sheet SUBIR en otra pestaña y asegurate de estar logueado en Google');
+      dot('err','Error Sheet');prog(0,'Error');return;
+    }
+    if(!filas.length){log('wrn','Sheet SUBIR vacío — completá PRECIO/DIAS/DESC/DISP');prog(0,'Sin datos');dot('ok','Sin datos');return;}
+
+    // Obtener CompanyId de los recientes escaneados
+    function getCid(sol){
+      const m=S.recs.find(function(c){return (c.Code||String(c.Id))===sol||String(c.Id)===sol;});
+      return m?parseInt(m.CompanyId)||0:0;
+    }
+
+    let aSubir=filas;
+    if(filas.length>C.MAX_S){log('wrn','Límite '+C.MAX_S+': procesando '+C.MAX_S+' de '+filas.length);aSubir=filas.slice(0,C.MAX_S);}
+    log('inf','Subiendo '+aSubir.length+' precios a SysCorp…');
+    log('inf','Se abrirán ventanas emergentes — habilitá popups para syscorpla.com');
+
+    for(let i=0;i<aSubir.length;i++){
+      const row=aSubir[i];
+      const cid=getCid(row.sol);
+      prog(10+Math.round(i/aSubir.length*85),'Subiendo '+(i+1)+'/'+aSubir.length+': '+row.sol+'/'+row.cod);
+      if(!cid){log('wrn',row.sol+': CompanyId desconocido — ejecutá EXTRAER primero para cargar recientes');S.err++;continue;}
+      try{
+        await subirEnVentana(row,cid);
+        log('ok','✓ '+row.sol+'/'+row.cod+' → ₡'+row.precio+' | '+row.dias+'d | '+row.desc+'% | '+row.disp);
+        S.sub++;
+        await new Promise(function(r){setTimeout(r,600);});
+      }catch(e){
+        if(e.message.includes('skip')||e.message.includes('nalizada')||e.message.includes('pirado')){
+          log('wrn','⏭ Skip '+row.sol+': '+e.message);
+        }else{
+          S.err++;log('err','✗ '+row.sol+'/'+row.cod+': '+e.message+' → reintentando');
+          try{
+            await new Promise(function(r){setTimeout(r,1500);});
+            await subirEnVentana(row,cid);
+            log('ok','✓ Reintento OK: '+row.sol);S.sub++;
+          }catch(e2){log('err','✗ Fallo: '+row.sol+' → LOG');}
+        }
+      }
+    }
+    prog(100,S.sub+' subidas');dot('ok',S.sub+' subidas');
+    log('ok','── FIN SUBIDA: '+S.sub+' OK, '+S.err+' errores ──');
+    if(filas.length>C.MAX_S)log('wrn','⚠ Quedan '+(filas.length-C.MAX_S)+' → ejecutá Subir de nuevo');
+  }catch(e){S.err++;log('err','Error subida: '+e.message);dot('err','Error');}
+  finally{S.busy=false;$('btn-run').disabled=false;ui();}
+}
+
+/* ══ MAIN ══ */
+async function doRun(){
+  if(S.busy){log('wrn','Operación en curso');return;}
+  if(S.op==='ext')await doExtraer();
+  else await doSubir();
+}
+
+/* ══ INIT ══ */
+cargarIdx();setOp('ext');
+log('ok','SYSCORP Assistant · DIMA Parts');
+log('inf','Flujo extraer: BOOKMARKLETS → instalar DIMA-PANEL → ejecutar en SysCorp → SCAN PANEL → EJECUTAR');
+log('inf','Flujo subir: completar Sheet SUBIR → modo SUBIR → EJECUTAR');
+dot('ok','Listo');
+</script>
+</body>
+</html>
