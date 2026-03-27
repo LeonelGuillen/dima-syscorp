@@ -776,6 +776,182 @@ async function doSubir(){
 
 async function extraerDetalleCot(id,cid,fecha){const win=window.open(C.BASE+C.APPLY+'?q='+encodeURIComponent(id)+'&c='+encodeURIComponent(cid),'_det_'+id,'width=1024,height=700');if(!win)throw new Error('Popup bloqueado');await new Promise((res,rej)=>{const t=setTimeout(()=>{win.close();rej(new Error('Timeout'));},25000);const iv=setInterval(()=>{try{if(win.closed){clearInterval(iv);clearTimeout(t);rej(new Error('Cerrada'));return;}if(win.document.querySelectorAll('tr[data-index]').length>0&&win.document.readyState==='complete'){clearInterval(iv);clearTimeout(t);res();}}catch(e){}},400);});function gl(t){const e=[...win.document.querySelectorAll('label')].find(e=>e.innerText.trim().replace(/:| /g,'').toLowerCase()===t.toLowerCase());return e&&e.nextElementSibling?e.nextElementSibling.innerText.trim():'';}const sol=gl('Solicitud')||String(id),comp=gl('Compañia')||gl('Compania'),caso=gl('Siniestro')||gl('Caso'),placa=(gl('Placa')||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-').trim(),marca=gl('Marca'),modelo=gl('Modelo'),anio=gl('Año')||gl('Ano'),vin=gl('VIN'),taller=gl('Taller');const qM={'':'NA','1':'ORIGINAL','2':'GENERICO','3':'USADO'},tM={'1':'Suministro','2':'Repuesto'};const f=[...win.document.querySelectorAll('tr[data-index]')].map(tr=>{const tds=[...tr.querySelectorAll('td')];const slT=tr.querySelector('#slType'),slQ=tr.querySelector('#slTypesQuotation'),dtP=tr.querySelector('#dtPrice'),dtD=tr.querySelector('#dtDays'),dtPc=tr.querySelector('#dtPercent'),cb=tr.querySelector('input[type=checkbox]');return[fecha,'SYSCORP',sol,comp,caso,placa,marca,modelo,anio,vin||'','','',taller,tds[0]?tds[0].innerText.trim():'',tds[1]?tds[1].innerText.trim():'',slT?qM[slT.value]||'':'',slQ?tM[slQ.value]||'':'','1',dtP?dtP.value:'',dtD?dtD.value:'',dtPc?dtPc.value:'',cb?(cb.checked?'SI':'NO'):'','','','',String(id)+'|'+String(cid)];});win.close();return f;}
 async function doAutoDetalle(){S.busy=true;dot('busy','Auto…');$('btn-run').disabled=true;log('inf','━━ AUTO-DETALLE ━━');prog(5,'Leyendo…');try{if(!navigator.clipboard)throw new Error('Sin Clipboard API');const txt=await navigator.clipboard.readText();if(!txt.trim()||!txt.includes('SYSCORP')){log('wrn','Ejecutá DIMA-PANEL primero');dot('ok','Esperando');prog(0,'—');return;}const cots=parseTSV(txt);if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}S.recs=cots;renderCots(cots);let nv=cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));log('inf','Total:'+cots.length+' Nuevas:'+nv.length);if(!nv.length){log('ok','Al día — todo procesado');prog(100,'Al día');dot('ok','Al día');return;}if(nv.length>C.MAX_E){S.queue=nv.slice(C.MAX_E).map(c=>String(c.Id));nv=nv.slice(0,C.MAX_E);log('wrn','Límite '+C.MAX_E+': '+nv.length+' ahora, '+S.queue.length+' en cola');}log('inf','Procesando '+nv.length+' cotizaciones (habilitá popups syscorpla.com)');const fch=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});const all=[];for(let i=0;i<nv.length;i++){const c=nv[i];prog(10+Math.round(i/nv.length*80),'('+(i+1)+'/'+nv.length+') '+c.Code);log('inf','↓ '+(i+1)+'/'+nv.length+' '+c.Code+' '+c.Vehicle.Brand+' '+c.Vehicle.Model);try{const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...f);S.idx.add(String(c.Id));S.ext++;log('ok','✓ '+c.Code+' → '+f.length+' partes');await new Promise(r=>setTimeout(r,600));}catch(e){S.err++;log('err','✗ '+c.Code+': '+e.message+' reintentando');try{await new Promise(r=>setTimeout(r,2000));const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...f);S.idx.add(String(c.Id));S.ext++;log('ok','✓ OK '+c.Code);}catch(e2){log('err','✗ Falló: '+c.Code);}}}if(!all.length){log('err','Sin filas');prog(0,'Error');return;}const tsv=all.map(r=>r.map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');const ok=await copiarTexto(tsv);guardarIdx();$('tsv-tit').textContent=ok?'✓ TSV COPIADO':'TSV GENERADO';$('tsv-desc').textContent=nv.length+' cots, '+all.length+' partes. '+(ok?'Abrí Sheet → primera celda vacía → Ctrl+V → Pegar.':'Copiá manualmente.')+(S.queue.length?' ⚠ Quedan '+S.queue.length+' → ejecutá de nuevo.':'');$('ov-tsv').classList.add('open');prog(100,all.length+' partes');dot('ok',S.ext+' extraídas');log('ok','━━ FIN: '+nv.length+' cots '+all.length+' partes '+S.err+' err ━━');if(S.queue.length)log('wrn','⚠ Quedan '+S.queue.length+' → ejecutá de nuevo');}catch(e){S.err++;log('err',e.message);dot('err','Error');prog(0,'Error');}finally{S.busy=false;$('btn-run').disabled=false;ui();}}
+
+/* ▲▲ IA-PILOTO: extracción autónoma con análisis de Claude ▲▲ */
+async function claudeIA(prompt, systemPrompt){
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: systemPrompt||'Sos el asistente de cotizaciones de DIMA Parts. Respondés solo en JSON sin backticks.',
+      messages:[{role:'user',content:prompt}]
+    })
+  });
+  const d = await resp.json();
+  const txt = d.content?.map(c=>c.text||'').join('') || '';
+  try{ return JSON.parse(txt.replace(/```json|```/g,'').trim()); }
+  catch(e){ return {raw:txt}; }
+}
+
+async function iaClasificarPartes(filas, vehiculo){
+  // Enviar lote de partes a Claude para clasificación inteligente
+  const partes = filas.slice(0,40).map((r,i)=>({i, cod:r[13], desc:r[14]}));
+  const prompt = 'Vehículo: '+vehiculo+'\nPartes:\n'+JSON.stringify(partes)+'\n\nPara cada parte sugerí la calidad óptima (ORIGINAL/GENERICO/USADO) y una observación corta (máx 30 chars). Respondé SOLO JSON array: [{"i":0,"calidad":"ORIGINAL","obs":""},...]';
+  try{
+    const res = await claudeIA(prompt, 'Sos experto en repuestos automotrices. Para piezas estructurales, de seguridad o electrónicas recomendás ORIGINAL. Para carrocería exterior podés sugerir GENERICO. Para piezas de bajo impacto podés sugerir USADO. Respondés SOLO JSON array.');
+    return Array.isArray(res) ? res : [];
+  }catch(e){ return []; }
+}
+
+async function iaPriorizar(cots){
+  const resumen = cots.slice(0,15).map(c=>({id:c.Id,code:c.Code,marca:c.Vehicle.Brand,modelo:c.Vehicle.Model,anio:c.Vehicle.Year,cia:c.strCompany}));
+  const prompt = 'Cotizaciones pendientes:\n'+JSON.stringify(resumen)+'\n\nOrdenálas por prioridad de atención (vehículos más nuevos y de marcas con disponibilidad de repuestos primero). Respondé SOLO JSON array de IDs ordenados: ["id1","id2",...]';
+  try{
+    const res = await claudeIA(prompt, 'Sos experto en gestión de cotizaciones de repuestos. Priorizás vehículos nuevos (más fácil conseguir repuestos), luego marcas comunes en CR (Toyota, Hyundai, Kia, Nissan, Honda). Respondés SOLO JSON array.');
+    return Array.isArray(res) ? res.map(String) : [];
+  }catch(e){ return []; }
+}
+
+async function doIAPiloto(){
+  S.busy=true; dot('busy','IA Piloto…'); $('btn-run').disabled=true;
+  log('inf','━━ 🤖 IA-PILOTO DIMA ━━');
+  log('inf','Modo autónomo: extrae todo + clasifica con IA hasta vaciar la cola');
+  prog(3,'Leyendo portapapeles…');
+
+  try{
+    if(!navigator.clipboard) throw new Error('Clipboard API no disponible');
+    const txt = await navigator.clipboard.readText();
+    if(!txt.trim()||!txt.includes('SYSCORP')){
+      log('wrn','Ejecutá DIMA-PANEL en SysCorp primero');
+      dot('ok','Esperando'); prog(0,'—'); return;
+    }
+
+    const cots = parseTSV(txt);
+    if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}
+    S.recs=cots; renderCots(cots);
+
+    let nuevas = cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));
+    log('inf','Panel: '+cots.length+' | Nuevas: '+nuevas.length);
+    if(!nuevas.length){log('ok','✓ Todo al día — índice completo');prog(100,'Al día');dot('ok','Al día');return;}
+
+    // ── PASO 1: IA prioriza las cotizaciones ──
+    log('inf','🧠 IA analizando prioridades…');
+    prog(8,'IA priorizando cotizaciones…');
+    const ordenIA = await iaPriorizar(nuevas);
+    if(ordenIA.length > 0){
+      const ordenMap = {};
+      ordenIA.forEach((id,i)=>ordenMap[String(id)]=i);
+      nuevas.sort((a,b)=>{
+        const ia = ordenMap[String(a.Id)]??999;
+        const ib = ordenMap[String(b.Id)]??999;
+        return ia-ib;
+      });
+      log('ok','🧠 IA priorizó: '+nuevas.slice(0,3).map(c=>c.Vehicle.Brand+' '+c.Vehicle.Model).join(', ')+(nuevas.length>3?'…':''));
+    } else {
+      log('wrn','IA no disponible — orden original del panel');
+    }
+
+    // ── PASO 2: Loop de extracción hasta vaciar la cola ──
+    const fecha = new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});
+    const todasFilas = [];
+    let ronda = 1;
+    let pendientes = [...nuevas];
+
+    while(pendientes.length > 0){
+      const lote = pendientes.slice(0, C.MAX_E);
+      pendientes = pendientes.slice(C.MAX_E);
+      log('inf','▶ Ronda '+ronda+': procesando '+lote.length+' cotizaciones'+(pendientes.length?' (quedan '+pendientes.length+')':''));
+
+      for(let i=0;i<lote.length;i++){
+        const c=lote[i];
+        const progTotal = Math.round(10+(ronda-1)*20 + i/lote.length*20);
+        prog(Math.min(progTotal,85),'Ronda '+ronda+' ('+( i+1)+'/'+lote.length+'): '+c.Code);
+        log('inf','↓ '+c.Code+' — '+c.Vehicle.Brand+' '+c.Vehicle.Model+' '+c.Vehicle.Year);
+
+        try{
+          let filas = await extraerDetalleCot(c.Id, c.CompanyId, fecha);
+
+          // ── PASO 3: IA clasifica partes de esta cotización ──
+          if(filas.length > 0){
+            log('inf','🧠 IA clasificando '+filas.length+' partes de '+c.Code+'…');
+            const vehiculo = c.Vehicle.Brand+' '+c.Vehicle.Model+' '+c.Vehicle.Year;
+            const sug = await iaClasificarPartes(filas, vehiculo);
+            if(sug.length > 0){
+              // Aplicar sugerencias de IA a las columnas P (calidad) y X (observaciones)
+              sug.forEach(s=>{
+                if(filas[s.i]){
+                  if(s.calidad && filas[s.i][15]==='NA') filas[s.i][15]=s.calidad;
+                  if(s.obs) filas[s.i][22]=s.obs;
+                }
+              });
+              const conSug = sug.filter(s=>s.calidad&&s.calidad!=='NA').length;
+              log('ok','🧠 '+conSug+'/'+filas.length+' partes clasificadas por IA');
+            }
+          }
+
+          todasFilas.push(...filas);
+          S.idx.add(String(c.Id)); S.ext++;
+          log('ok','✓ '+c.Code+' → '+filas.length+' partes');
+          await new Promise(r=>setTimeout(r,800));
+
+        }catch(e){
+          S.err++;
+          log('err','✗ '+c.Code+': '+e.message+' → reintentando');
+          try{
+            await new Promise(r=>setTimeout(r,2000));
+            const filas = await extraerDetalleCot(c.Id, c.CompanyId, fecha);
+            todasFilas.push(...filas); S.idx.add(String(c.Id)); S.ext++;
+            log('ok','✓ Reintento OK: '+c.Code);
+          }catch(e2){ log('err','✗ Falló definitivo: '+c.Code); }
+        }
+      }
+
+      guardarIdx();
+      log('ok','✓ Ronda '+ronda+' completa. Acumuladas: '+todasFilas.length+' partes');
+      ronda++;
+
+      // Pausa entre rondas para no sobrecargar
+      if(pendientes.length > 0){
+        log('inf','⏳ Pausa 2s antes de ronda '+ronda+'…');
+        await new Promise(r=>setTimeout(r,2000));
+      }
+    }
+
+    if(!todasFilas.length){log('err','Sin filas generadas');prog(0,'Error');return;}
+
+    // ── PASO 4: IA genera resumen ejecutivo ──
+    prog(90,'🧠 IA generando resumen…');
+    log('inf','🧠 IA generando resumen ejecutivo…');
+    try{
+      const resumenPrompt = 'Extracción DIMA Parts completada:\n- '+nuevas.length+' cotizaciones procesadas\n- '+todasFilas.length+' partes totales\n- '+S.err+' errores\n- Compañías: '+[...new Set(nuevas.map(c=>c.strCompany))].join(', ')+'\n\nGenerá un resumen ejecutivo en 2 líneas máx para el equipo de cotizaciones. SOLO texto plano, sin JSON.';
+      const resIA = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:150,messages:[{role:'user',content:resumenPrompt}]})});
+      const resD = await resIA.json();
+      const resTexto = resD.content?.[0]?.text||'';
+      if(resTexto) log('ok','📋 '+resTexto.trim().slice(0,120));
+    }catch(e){ log('wrn','Resumen IA no disponible'); }
+
+    // ── PASO 5: copiar TSV y abrir modal ──
+    prog(95,'Copiando TSV…');
+    const tsv = todasFilas.map(r=>r.map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');
+    const ok = await copiarTexto(tsv);
+    guardarIdx();
+
+    $('tsv-tit').textContent = ok ? '🤖 IA-PILOTO: TSV LISTO' : 'TSV GENERADO';
+    $('tsv-desc').textContent = nuevas.length+' cotizaciones · '+todasFilas.length+' partes · '+ronda-1+' rondas · '+S.err+' errores. '+(ok?'Abrí Sheet → primera celda vacía → Ctrl+V → Pegar.':'Clipboard bloqueado.');
+    $('ov-tsv').classList.add('open');
+    prog(100, todasFilas.length+' partes · '+ronda-1+' rondas');
+    dot('ok', S.ext+' extraídas');
+    log('ok','━━ 🤖 FIN IA-PILOTO: '+nuevas.length+' cots · '+todasFilas.length+' partes · '+S.err+' err · '+(ronda-1)+' rondas ━━');
+
+  }catch(e){
+    S.err++; log('err','IA-Piloto: '+e.message); dot('err','Error'); prog(0,'Error');
+  }finally{
+    S.busy=false; $('btn-run').disabled=false; ui();
+  }
+}
+
 async function doRun(){
   if(S.busy){log('wrn','Operación en curso');return;}
   if(S.op==='ext')await doExtraer();
