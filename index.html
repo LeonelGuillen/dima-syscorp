@@ -682,8 +682,8 @@ async function subirEnVentana(row,companyId){
 
 /* ▲▲ DOEXTRAER ▲▲ */
 async function doExtraer(){
-  S.busy=true;dot('busy','Extrayendo…');$('fab').disabled=true;
-  log('inf','━━ EXTRACCIÓN SYSCORP ━━');prog(5,'Leyendo datos…');
+  S.busy=true;dot('busy','Extrayendo...');$('fab').disabled=true;
+  log('inf','== EXTRACCION SYSCORP ==');prog(5,'Leyendo datos...');
   try{
     let txt='';
     try{
@@ -694,68 +694,64 @@ async function doExtraer(){
         ]);
       }
     }catch(e){
-      log('wrn','Clipboard bloqueado — usá el campo de pegado');
+      log('wrn','Clipboard bloqueado - usa el campo de pegado');
       txt=($('paste-area')||{}).value||'';
     }
     if(!txt||!txt.includes('SYSCORP')){
       try{ txt=await leerTSV(); }
       catch(e){
         if(e.message==='CLIPBOARD_MODAL'){
-          dot('ok','Pegá los datos');prog(0,'Esperando');
+          dot('ok','Pega los datos');prog(0,'Esperando');
           S.busy=false;$('fab').disabled=false;return;
         }
         throw e;
       }
     }
     if(!txt||!txt.trim()||!txt.includes('SYSCORP')){
-      log('wrn','Sin datos — pegá el TSV en el campo de texto o usá DIMA-PANEL');
-      dot('ok','Pegá los datos');prog(0,'—');
+      log('wrn','Sin datos - pega el TSV en el campo o usa DIMA-PANEL');
+      dot('ok','Pega los datos');prog(0,'-');
       S.busy=false;$('fab').disabled=false;
       const pa=$('paste-area');if(pa){pa.scrollIntoView({behavior:'smooth'});pa.focus();}
       return;
     }
-    prog(25,'Parseando TSV…');
+    prog(25,'Parseando TSV...');
     const cots=parseTSV(txt);
     if(!cots.length){log('err','No se reconocieron cotizaciones');prog(0,'Error');return;}
     log('ok',cots.length+' cotizaciones detectadas');
     S.recs=cots;renderCots(cots);
     let nuevas=cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));
-    log('inf','Total:'+cots.length+' | Nuevas:'+nuevas.length+' | Índice:'+(cots.length-nuevas.length));
-    if(!nuevas.length){log('ok','Sin novedades — todo al día');prog(100,'Al día');dot('ok','Al día');return;}
+    log('inf','Total:'+cots.length+' | Nuevas:'+nuevas.length+' | Indice:'+(cots.length-nuevas.length));
+    if(!nuevas.length){log('ok','Sin novedades - todo al dia');prog(100,'Al dia');dot('ok','Al dia');return;}
     if(nuevas.length>C.MAX_E){
       S.queue=nuevas.slice(C.MAX_E).map(c=>String(c.Id));
       nuevas=nuevas.slice(0,C.MAX_E);
-      log('wrn','Límite '+C.MAX_E+': procesando '+nuevas.length+', quedan '+S.queue.length);
+      log('wrn','Limite '+C.MAX_E+': procesando '+nuevas.length+', quedan '+S.queue.length);
     }
-    prog(60,'Construyendo TSV ('+nuevas.length+' cots)…');
+    prog(60,'Construyendo TSV ('+nuevas.length+' cots)...');
     const fecha=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});
     const rows=nuevas.map(c=>{
       const r=c._row||[];
       if(r.length>=25&&r[1]==='SYSCORP')return r.slice(0,25).concat(['']);
       const v=c.Vehicle||{};
-      const placa=(c.LicensePlate||'').replace(/^Ps*-s*/,'').replace(/^CLs*-s*/,'CL-');
+      const placa=(c.LicensePlate||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-');
       return [fecha,'SYSCORP',c.Code||String(c.Id),c.strCompany||'',c.SinisterId||'',
         placa,v.Brand||'',v.Model||'',String(v.Year||''),v.VIN||'',
         c.StartDate||'',c.EndDate||'',(c.BodyShop&&c.BodyShop.Name)||'',
         '','','','','1','','','','','','','',''];
     });
-    const tsv=rows.map(r=>r.slice(0,26).map(v=>(v==null?'':String(v)).replace(/[	
-]/g,' ')).join('	')).join('
-');
+    const tsv=rows.map(r=>r.slice(0,26).map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');
     nuevas.forEach(c=>S.idx.add(String(c.Id)));
     S.ext+=nuevas.length;
-    prog(85,'Copiando TSV…');
+    prog(85,'Copiando TSV...');
     const ok=await copiarTexto(tsv);
     guardarIdx();
-    $('tsv-tit').textContent=ok?'✓ TSV COPIADO':'TSV GENERADO';
-    $('tsv-desc').textContent=nuevas.length+' cotizaciones, '+rows.length+' filas. '+
-      (ok?'Abrí Google Sheets → celda vacía → mantené presionado → Pegar.':'Pegá manualmente.')+
-      (S.queue.length?' ⚠ Quedan '+S.queue.length+' → ejecutá de nuevo.':'');
+    $('tsv-tit').textContent=ok?'TSV COPIADO':'TSV GENERADO';
+    $('tsv-desc').textContent=nuevas.length+' cotizaciones, '+rows.length+' filas. '+(ok?'Abri Google Sheets -> celda vacia -> manten presionado -> Pegar.':'Pega manualmente.')+(S.queue.length?' Quedan '+S.queue.length+' -> ejecuta de nuevo.':'');
     $('ov-tsv').classList.add('open');
-    prog(100,rows.length+' filas listas');dot('ok',S.ext+' extraídas');
-    log('ok','━━ FIN: '+nuevas.length+' cots, '+rows.length+' filas ━━');
-    if(S.queue.length)log('wrn','⚠ Quedan '+S.queue.length+' → ejecutá de nuevo');
-  }catch(e){S.err++;log('err','Extracción: '+e.message);dot('err','Error');prog(0,'Error');}
+    prog(100,rows.length+' filas listas');dot('ok',S.ext+' extraidas');
+    log('ok','== FIN: '+nuevas.length+' cots, '+rows.length+' filas ==');
+    if(S.queue.length)log('wrn','Quedan '+S.queue.length+' -> ejecuta de nuevo');
+  }catch(e){S.err++;log('err','Extraccion: '+e.message);dot('err','Error');prog(0,'Error');}
   finally{S.busy=false;$('fab').disabled=false;ui();}
 }
 async function doAutoDetalle(){
