@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>SYSCORP · DIMA</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
@@ -16,101 +18,128 @@
   --am:#ffb830;--am2:rgba(255,184,48,.13);
   --rd:#ff4d6a;--rd2:rgba(255,77,106,.13);
   --pu:#b67cff;--pu2:rgba(182,124,255,.13);
-  --r:10px;--rm:7px;
+  --r:12px;--rm:8px;
   --mono:'IBM Plex Mono',monospace;
   --sans:'DM Sans',sans-serif;
 }
-body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;min-height:100vh;padding-bottom:32px}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:15px;min-height:100vh;padding-bottom:100px;overscroll-behavior:none}
 
 /* TOPBAR */
-.tb{background:linear-gradient(180deg,#161b27,#0c0e12);border-bottom:1px solid var(--br);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:40;backdrop-filter:blur(20px)}
-.tb-logo{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:1.5px;color:var(--gr)}
-.tb-sub{font-size:9px;color:var(--mu);letter-spacing:.8px;margin-top:2px;text-transform:uppercase}
-.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--hi);flex-shrink:0}
-.dot.ok{background:var(--gr);box-shadow:0 0 7px var(--gr)}.dot.busy{background:var(--am);animation:pu 1.2s infinite}.dot.err{background:var(--rd)}
+.tb{background:linear-gradient(180deg,#161b27,#0c0e12);border-bottom:1px solid var(--br);padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:40;backdrop-filter:blur(20px)}
+.tb-logo{font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:1.5px;color:var(--gr)}
+.tb-sub{font-size:10px;color:var(--mu);letter-spacing:.8px;margin-top:2px;text-transform:uppercase}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--hi);flex-shrink:0}
+.dot.ok{background:var(--gr);box-shadow:0 0 8px var(--gr)}.dot.busy{background:var(--am);animation:pu 1.2s infinite}.dot.err{background:var(--rd)}
 @keyframes pu{0%,100%{opacity:1}50%{opacity:.2}}
-.tb-lbl{font-size:9px;color:var(--mu);font-family:var(--mono);letter-spacing:.5px}
+.tb-lbl{font-size:10px;color:var(--mu);font-family:var(--mono);letter-spacing:.5px}
 
 /* CARDS */
 .card{background:var(--s1);border:1px solid var(--br);border-radius:var(--r);margin:10px 12px 0;overflow:hidden}
-.chdr{padding:8px 14px;border-bottom:1px solid var(--br);font-size:9px;font-weight:700;color:var(--mu);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono)}
-.badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.5px;font-family:var(--mono)}
+.chdr{padding:10px 16px;border-bottom:1px solid var(--br);font-size:10px;font-weight:700;color:var(--mu);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono)}
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px;font-family:var(--mono)}
 .bg{background:var(--gr2);color:var(--gr)}.bb{background:var(--bl2);color:var(--bl)}.ba{background:var(--am2);color:var(--am)}.br_{background:var(--rd2);color:var(--rd)}.bp{background:var(--pu2);color:var(--pu)}
 
 /* MÉTRICAS */
 .met{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--br)}
-.m{background:var(--s1);padding:11px 8px;text-align:center}
-.mv{font-size:19px;font-weight:700;line-height:1;font-family:var(--mono)}
+.m{background:var(--s1);padding:12px 8px;text-align:center}
+.mv{font-size:22px;font-weight:700;line-height:1;font-family:var(--mono)}
 .mv.g{color:var(--gr)}.mv.b{color:var(--bl)}.mv.a{color:var(--am)}.mv.r{color:var(--rd)}
-.ml{font-size:8px;color:var(--mu);margin-top:3px;letter-spacing:.5px;text-transform:uppercase}
-.pgw{height:2px;background:var(--s3);margin:0 14px 5px}
+.ml{font-size:9px;color:var(--mu);margin-top:4px;letter-spacing:.5px;text-transform:uppercase}
+.pgw{height:3px;background:var(--s3);margin:0 16px 6px}
 .pgb{height:100%;width:0;background:var(--gr);transition:width .4s;box-shadow:0 0 8px var(--gr)}
-.pgl{font-size:9px;color:var(--hi);padding:0 14px 9px;text-align:right;font-family:var(--mono)}
+.pgl{font-size:10px;color:var(--hi);padding:0 16px 10px;text-align:right;font-family:var(--mono)}
 
-/* BOTONES */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px}
-.btn{padding:12px 10px;border-radius:var(--rm);border:1px solid var(--br2);font-size:11px;font-weight:700;cursor:pointer;background:var(--s2);color:var(--tx);display:flex;align-items:center;justify-content:center;gap:6px;width:100%;-webkit-user-select:none;transition:all .15s;letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono)}
-.btn:active{transform:scale(.96);opacity:.7}.btn:disabled{opacity:.18;cursor:not-allowed}
+/* BOTONES GRANDES — táctil Android */
+.btn{padding:16px 12px;border-radius:var(--rm);border:1px solid var(--br2);font-size:13px;font-weight:700;cursor:pointer;background:var(--s2);color:var(--tx);display:flex;align-items:center;justify-content:center;gap:8px;width:100%;-webkit-user-select:none;transition:all .15s;letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono);min-height:54px;touch-action:manipulation}
+.btn:active{transform:scale(.96);opacity:.7;background:var(--s3)}
+.btn:disabled{opacity:.18;cursor:not-allowed}
 .btn.full{grid-column:1/-1}
 .btn.gr{background:var(--gr2);color:var(--gr);border-color:rgba(0,214,143,.4)}
 .btn.bl{background:var(--bl2);color:var(--bl);border-color:rgba(77,141,255,.4)}
 .btn.am{background:var(--am2);color:var(--am);border-color:rgba(255,184,48,.4)}
 .btn.rd{background:var(--rd2);color:var(--rd);border-color:rgba(255,77,106,.4)}
 .btn.pu{background:var(--pu2);color:var(--pu);border-color:rgba(182,124,255,.4)}
+.btn.ia{background:linear-gradient(135deg,var(--pu2),var(--bl2));color:var(--pu);border-color:rgba(182,124,255,.5)}
+.g1{padding:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
 
-/* CHIPS */
-.chips{display:flex;gap:6px;padding:9px 14px;flex-wrap:wrap}
-.chip{padding:5px 11px;border-radius:3px;font-size:9px;font-weight:700;border:1px solid var(--br2);color:var(--mu);cursor:pointer;transition:all .15s;letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono)}
-.chip.ext{background:var(--gr2);color:var(--gr);border-color:rgba(0,214,143,.4)}
-.chip.sub{background:var(--bl2);color:var(--bl);border-color:rgba(77,141,255,.4)}
+/* PASOS ANDROID — flujo visual */
+.steps-flow{padding:12px 16px;display:flex;flex-direction:column;gap:0}
+.step-row{display:flex;gap:12px;align-items:stretch;padding:10px 0;border-bottom:1px solid var(--br)}
+.step-row:last-child{border-bottom:none}
+.step-num{width:28px;height:28px;border-radius:6px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);margin-top:2px}
+.step-num.done{background:var(--gr2);color:var(--gr)}
+.step-num.active{background:var(--am2);color:var(--am);animation:pu 1.2s infinite}
+.step-num.wait{background:var(--s3);color:var(--hi)}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:3px}
+.step-desc{font-size:11px;color:var(--mu);line-height:1.5}
+.step-desc b{color:var(--am)}
+.step-action{margin-top:8px}
+
+/* CHIPS modos */
+.modes{display:flex;gap:8px;padding:12px 16px;flex-wrap:wrap}
+.mode{padding:10px 16px;border-radius:var(--rm);font-size:12px;font-weight:700;border:1px solid var(--br2);color:var(--mu);cursor:pointer;transition:all .15s;letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono);touch-action:manipulation;min-height:44px;display:flex;align-items:center;gap:6px}
+.mode:active{transform:scale(.95)}
+.mode.ext{background:var(--gr2);color:var(--gr);border-color:rgba(0,214,143,.4)}
+.mode.sub{background:var(--bl2);color:var(--bl);border-color:rgba(77,141,255,.4)}
+.mode.ia{background:linear-gradient(135deg,var(--pu2),var(--bl2));color:var(--pu);border-color:rgba(182,124,255,.5)}
 
 /* COTIZACIONES */
-.cot-item{padding:9px 14px;border-bottom:1px solid var(--br);display:flex;gap:9px;align-items:flex-start;cursor:pointer;transition:background .1s}
+.cot-item{padding:12px 16px;border-bottom:1px solid var(--br);display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:background .1s;touch-action:manipulation}
 .cot-item:active{background:var(--s2)}.cot-item:last-child{border-bottom:none}
-.cdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
 .cdot.open{background:var(--gr);box-shadow:0 0 6px var(--gr)}.cdot.part{background:var(--am)}.cdot.done{background:var(--hi)}
 .cbody{flex:1;min-width:0}
-.ccode{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--gr);letter-spacing:.8px}
-.ctitle{font-size:12px;font-weight:600;color:var(--tx);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cmeta{font-size:9px;color:var(--mu);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
-.ctag{font-size:8px;font-weight:700;padding:1px 5px;border-radius:2px;font-family:var(--mono)}
+.ccode{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gr);letter-spacing:.8px}
+.ctitle{font-size:13px;font-weight:600;color:var(--tx);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmeta{font-size:10px;color:var(--mu);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap}
+.ctag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--mono)}
 .ctag.p{background:var(--am2);color:var(--am)}.ctag.n{background:var(--gr2);color:var(--gr)}.ctag.r{background:var(--pu2);color:var(--pu)}
 .cright{text-align:right;flex-shrink:0}
-.cdate{font-size:9px;color:var(--mu);font-family:var(--mono)}
-.carrow{font-size:12px;color:var(--hi)}
-.empty{padding:20px 14px;text-align:center;color:var(--hi);font-size:11px;font-family:var(--mono)}
+.cdate{font-size:10px;color:var(--mu);font-family:var(--mono)}
+.carrow{font-size:14px;color:var(--hi)}
+.empty{padding:24px 16px;text-align:center;color:var(--hi);font-size:12px;font-family:var(--mono)}
 
 /* LOG */
-.logw{max-height:220px;overflow-y:auto;padding:9px 14px;-webkit-overflow-scrolling:touch}
+.logw{max-height:200px;overflow-y:auto;padding:10px 16px;-webkit-overflow-scrolling:touch}
 .logw::-webkit-scrollbar{width:2px}.logw::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px}
-.ll{display:flex;gap:5px;align-items:flex-start;padding:1px 0;font-family:var(--mono);font-size:10px}
-.lt{color:var(--hi);min-width:44px;flex-shrink:0;padding-top:1px;font-size:9px}
-.tag{font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;min-width:28px;text-align:center;flex-shrink:0;letter-spacing:.3px}
-.tok{background:var(--gr2);color:var(--gr)}.tinf{background:var(--bl2);color:var(--bl)}.twn{background:var(--am2);color:var(--am)}.ter{background:var(--rd2);color:var(--rd)}
-.lm{color:var(--tx);word-break:break-all;line-height:1.5;font-size:10px}
+.ll{display:flex;gap:6px;align-items:flex-start;padding:2px 0;font-family:var(--mono);font-size:11px}
+.lt{color:var(--hi);min-width:46px;flex-shrink:0;padding-top:1px;font-size:10px}
+.tag{font-size:9px;font-weight:700;padding:2px 5px;border-radius:2px;min-width:30px;text-align:center;flex-shrink:0;letter-spacing:.3px}
+.tok{background:var(--gr2);color:var(--gr)}.tinf{background:var(--bl2);color:var(--bl)}.twn{background:var(--am2);color:var(--am)}.ter{background:var(--rd2);color:var(--rd)}.tia{background:var(--pu2);color:var(--pu)}
+.lm{color:var(--tx);word-break:break-all;line-height:1.5;font-size:11px}
 
 /* INFO GRID */
 .ig{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.ir{padding:8px 14px;border-bottom:1px solid var(--br);display:flex;flex-direction:column;gap:2px}
+.ir{padding:10px 16px;border-bottom:1px solid var(--br);display:flex;flex-direction:column;gap:3px}
 .ir:nth-child(odd){border-right:1px solid var(--br)}.ir:nth-last-child(1),.ir:nth-last-child(2){border-bottom:none}
-.ik{font-size:8px;color:var(--mu);letter-spacing:.6px;text-transform:uppercase;font-family:var(--mono)}.iv{font-size:12px;font-weight:600;font-family:var(--mono);color:var(--tx)}
+.ik{font-size:9px;color:var(--mu);letter-spacing:.6px;text-transform:uppercase;font-family:var(--mono)}.iv{font-size:13px;font-weight:600;font-family:var(--mono);color:var(--tx)}
 .iv.g{color:var(--gr)}.iv.a{color:var(--am)}
 
 /* MODAL */
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:60;align-items:flex-end;justify-content:center}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:60;align-items:flex-end;justify-content:center}
 .ov.open{display:flex}
-.sh{background:var(--s1);border-radius:var(--r) var(--r) 0 0;border:1px solid var(--br);border-bottom:none;width:100%;max-width:520px;padding:18px 16px 34px;max-height:90vh;overflow-y:auto}
-.sh h3{font-size:13px;font-weight:700;margin-bottom:4px;font-family:var(--mono);color:var(--gr);letter-spacing:.8px;text-transform:uppercase}
-.sh p{font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.65}
-.sh2{display:flex;gap:8px}.sh2 .btn{flex:1}
-.steps{display:flex;flex-direction:column;gap:0;margin-bottom:12px}
-.step{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--br)}.step:last-child{border-bottom:none}
-.sn{width:18px;height:18px;border-radius:2px;background:var(--bl2);color:var(--bl);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)}
-.st{font-size:11px;color:var(--mu);flex:1;line-height:1.55}.st b{color:var(--tx)}.st code{color:var(--gr);font-family:var(--mono);font-size:9px;background:var(--gr3);padding:1px 4px;border-radius:2px}
+.sh{background:var(--s1);border-radius:var(--r) var(--r) 0 0;border:1px solid var(--br);border-bottom:none;width:100%;max-width:520px;padding:20px 18px 40px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sh h3{font-size:14px;font-weight:700;margin-bottom:6px;font-family:var(--mono);color:var(--gr);letter-spacing:.8px;text-transform:uppercase}
+.sh p{font-size:12px;color:var(--mu);margin-bottom:16px;line-height:1.7}
+.sh2{display:flex;gap:10px}.sh2 .btn{flex:1}
+
+/* INSTRUCCION ANDROID */
+.android-tip{background:var(--am2);border:1px solid rgba(255,184,48,.3);border-radius:var(--rm);padding:12px 14px;margin:8px 0;font-size:12px;color:var(--am);line-height:1.6}
+.android-tip b{font-weight:700;display:block;margin-bottom:4px;font-family:var(--mono);font-size:11px;letter-spacing:.5px}
 
 /* BM CODE */
-.bmcode{background:var(--bg);border:1px solid var(--br2);border-radius:var(--rm);padding:10px 12px;font-family:var(--mono);font-size:9px;color:var(--gr);white-space:pre-wrap;word-break:break-all;max-height:80px;overflow:hidden;margin-bottom:8px;-webkit-user-select:all;user-select:all}
+.bmcode{background:var(--bg);border:1px solid var(--br2);border-radius:var(--rm);padding:12px;font-family:var(--mono);font-size:10px;color:var(--gr);white-space:pre-wrap;word-break:break-all;max-height:90px;overflow:hidden;margin-bottom:10px;-webkit-user-select:all;user-select:all}
+
+/* BOTTOM FAB — acción principal táctil */
+.fab{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:50;width:calc(100% - 24px);max-width:480px}
+.fab-btn{width:100%;padding:18px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--gr),#00b87a);color:#0c0e12;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.8px;text-transform:uppercase;font-family:var(--mono);box-shadow:0 8px 32px rgba(0,214,143,.4);touch-action:manipulation;-webkit-user-select:none}
+.fab-btn:active{transform:scale(.97);opacity:.9}
+.fab-btn:disabled{opacity:.3;background:var(--s3);color:var(--mu);box-shadow:none}
+.fab-btn.ia-mode{background:linear-gradient(135deg,var(--pu),#9b59b6);box-shadow:0 8px 32px rgba(182,124,255,.4);color:#fff}
+.fab-btn.sub-mode{background:linear-gradient(135deg,var(--bl),#3a7bd5);box-shadow:0 8px 32px rgba(77,141,255,.4);color:#fff}
 </style>
 </head>
 <body>
@@ -132,46 +161,31 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px
   <div class="pgl" id="pl">—</div>
 </div>
 
-<!-- OPERACIÓN -->
+<!-- MODOS -->
 <div class="card">
   <div class="chdr">Operación <span class="badge bg" id="mbadge">EXTRAER</span></div>
-  <div class="chips">
-    <div class="chip ext" id="ch-ext" onclick="setOp('ext')">◀ Extraer</div>
-    <div class="chip" id="ch-sub" onclick="setOp('sub')">▶ Subir precios</div>
-    <div class="chip" id="ch-auto" onclick="setOp('auto')">⚡ Auto-Detalle</div>
-  </div>
-  <div class="g2" style="padding:0 10px 10px">
-    <button class="btn gr full" id="btn-run" onclick="doRun()">▶ EJECUTAR</button>
-    <button class="btn" onclick="doScan()">⟳ SCAN PANEL</button>
-    <button class="btn am" onclick="showBM()">⚙ BOOKMARKLETS</button>
+  <div class="modes">
+    <div class="mode ext" id="ch-ext" onclick="setOp('ext')">◀ Extraer</div>
+    <div class="mode" id="ch-sub" onclick="setOp('sub')">▶ Subir precios</div>
+    <div class="mode ia" id="ch-ia" onclick="setOp('ia')">🤖 IA-Piloto</div>
   </div>
 </div>
 
-<!-- ACCIONES -->
-<div class="card">
-  <div class="chdr">Acciones</div>
-  <div class="g2">
-    <button class="btn" onclick="doStatus()">≡ ESTADO</button>
-    <button class="btn rd" onclick="document.getElementById('ov-rst').classList.add('open')">⌫ RESET</button>
-    <button class="btn gr full" onclick="openSysCorpPanel()">↗ ABRIR SYSCORP PANEL</button>
-    <button class="btn bl full" onclick="openSheet('W')">↗ SHEET COTIZACIONES</button>
-    <button class="btn pu full" onclick="openSheet('R')">↗ SHEET SUBIR</button>
+<!-- FLUJO ANDROID — pasos visuales -->
+<div class="card" id="card-flujo">
+  <div class="chdr">Flujo Android</div>
+  <div class="steps-flow" id="steps-container">
+    <!-- se renderiza por JS según el modo -->
   </div>
 </div>
 
 <!-- RECIENTES -->
 <div class="card">
   <div class="chdr">Recientes <span class="badge" id="recbadge" style="background:var(--s3);color:var(--mu)">0</span></div>
-  <div id="cot-list"><div class="empty">⬡ Ejecutá SCAN PANEL o el bookmarklet de panel</div></div>
+  <div id="cot-list"><div class="empty">⬡ Ejecutá el paso 1 del flujo</div></div>
 </div>
 
-<!-- COLA -->
-<div class="card">
-  <div class="chdr">Cola pendiente <span class="badge ba" id="qb" style="display:none">0</span></div>
-  <div id="queue-list" style="padding:9px 14px;font-size:10px;color:var(--mu);font-family:var(--mono)">Vacía</div>
-</div>
-
-<!-- ÍNDICE -->
+<!-- ÍNDICE LOCAL -->
 <div class="card">
   <div class="chdr">Índice local</div>
   <div class="ig">
@@ -181,10 +195,34 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px
   </div>
 </div>
 
+<!-- COLA -->
+<div class="card" id="card-cola" style="display:none">
+  <div class="chdr">Cola pendiente <span class="badge ba" id="qb">0</span></div>
+  <div id="queue-list" style="padding:10px 16px;font-size:11px;color:var(--mu);font-family:var(--mono)"></div>
+</div>
+
 <!-- LOG -->
-<div class="card" style="margin-bottom:12px">
+<div class="card" style="margin-bottom:110px">
   <div class="chdr">Log <span style="color:var(--hi);cursor:pointer;font-weight:400" onclick="limpiarLog()">limpiar</span></div>
   <div class="logw" id="log"></div>
+</div>
+
+<!-- FAB — botón principal fijo abajo -->
+<div class="fab">
+  <button class="fab-btn" id="fab" onclick="doRun()">▶ EJECUTAR</button>
+</div>
+
+<!-- MODAL TSV -->
+<div class="ov" id="ov-tsv">
+  <div class="sh">
+    <h3 id="tsv-tit">TSV copiado</h3>
+    <p id="tsv-desc">Abrí la Sheet y pegá.</p>
+    <div class="android-tip"><b>📋 EN ANDROID:</b>Abrí Google Sheets → tocá la primera celda vacía → mantené presionado → "Pegar".</div>
+    <div class="sh2">
+      <button class="btn gr" onclick="openSheet('W');document.getElementById('ov-tsv').classList.remove('open')">Abrir Sheet</button>
+      <button class="btn" onclick="document.getElementById('ov-tsv').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL RESET -->
@@ -199,47 +237,36 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px
   </div>
 </div>
 
-<!-- MODAL TSV -->
-<div class="ov" id="ov-tsv">
+<!-- MODAL ACCIONES -->
+<div class="ov" id="ov-menu">
   <div class="sh">
-    <h3 id="tsv-tit">TSV copiado</h3>
-    <p id="tsv-desc">Abrí la Sheet y pegá con Ctrl+V o toque largo → Pegar.</p>
-    <div class="sh2">
-      <button class="btn gr" onclick="openSheet('W');document.getElementById('ov-tsv').classList.remove('open')">Abrir Sheet</button>
-      <button class="btn" onclick="document.getElementById('ov-tsv').classList.remove('open')">Cerrar</button>
+    <h3>Acciones</h3>
+    <div class="g1" style="display:flex;flex-direction:column;gap:10px;padding:0 0 8px">
+      <button class="btn" onclick="doStatus();document.getElementById('ov-menu').classList.remove('open')">≡ ESTADO</button>
+      <button class="btn gr full" onclick="openSysCorpPanel();document.getElementById('ov-menu').classList.remove('open')">↗ ABRIR SYSCORP</button>
+      <button class="btn bl full" onclick="openSheet('W');document.getElementById('ov-menu').classList.remove('open')">↗ SHEET COTIZACIONES</button>
+      <button class="btn pu full" onclick="openSheet('R');document.getElementById('ov-menu').classList.remove('open')">↗ SHEET SUBIR</button>
+      <button class="btn rd" onclick="document.getElementById('ov-rst').classList.add('open');document.getElementById('ov-menu').classList.remove('open')">⌫ RESET ÍNDICE</button>
     </div>
+    <button class="btn" onclick="document.getElementById('ov-menu').classList.remove('open')">Cerrar</button>
   </div>
 </div>
 
-<!-- MODAL BOOKMARKLETS -->
-<div class="ov" id="ov-bm">
+<!-- MODAL INSTRUCCIONES SYSCORP -->
+<div class="ov" id="ov-syscorp">
   <div class="sh">
-    <h3>Bookmarklets DIMA</h3>
-    <p>Dos bookmarklets para usar desde SysCorp en Chrome. Guardá cada uno en Favoritos con su URL <code style="font-family:var(--mono);color:var(--gr);font-size:9px">javascript:...</code>.</p>
-
-    <div style="font-size:10px;font-weight:700;color:var(--am);font-family:var(--mono);letter-spacing:.8px;margin-bottom:6px">① DIMA-PANEL — en /Cotizaciones/Panel</div>
-    <div class="bmcode" id="bm-panel">Generando…</div>
-    <button class="btn am full" style="margin-bottom:14px" onclick="copiarBM('panel')">Copiar código PANEL</button>
-
-    <div style="font-size:10px;font-weight:700;color:var(--bl);font-family:var(--mono);letter-spacing:.8px;margin-bottom:6px">② DIMA-DETALLE — en /Cotizaciones/Aplicar</div>
-    <div class="bmcode" id="bm-detalle">Generando…</div>
-    <button class="btn bl full" style="margin-bottom:14px" onclick="copiarBM('det')">Copiar código DETALLE</button>
-
-    <div class="steps" style="margin-bottom:14px">
-      <div class="step"><div class="sn">1</div><div class="st">Copiá el código del bookmarklet que necesitás.</div></div>
-      <div class="step"><div class="sn">2</div><div class="st">En Chrome: tocá ☆ en la barra de URL para guardar la página como favorito. Editá el favorito y pegá el código copiado en el campo URL. Guardá con nombre <b>DIMA-PANEL</b> o <b>DIMA-DETALLE</b>.</div></div>
-      <div class="step"><div class="sn">3</div><div class="st"><b>Para extraer del panel:</b> Abrí SysCorp → Panel → tocá favorito <code>DIMA-PANEL</code> → volvé acá → <code>SCAN PANEL</code>.</div></div>
-      <div class="step"><div class="sn">4</div><div class="st"><b>Para extraer partes:</b> Abrí una cotización en SysCorp → tocá favorito <code>DIMA-DETALLE</code> → volvé acá → <code>SCAN PANEL</code>.</div></div>
-    </div>
-
-    <div class="sh2">
-      <button class="btn gr full" onclick="document.getElementById('ov-bm').classList.remove('open')">Cerrar</button>
+    <h3 id="syscorp-title">Paso 1: Abrir SysCorp</h3>
+    <p id="syscorp-desc"></p>
+    <div id="syscorp-steps"></div>
+    <div class="sh2" style="margin-top:8px">
+      <button class="btn gr" id="syscorp-action-btn">Abrir SysCorp</button>
+      <button class="btn" onclick="document.getElementById('ov-syscorp').classList.remove('open')">Cerrar</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ══ CONFIG ══ */
+/* ▲▲ CONFIG ▲▲ */
 const C={
   BASE:'https://syscorpla.com',
   PANEL:'/Cotizaciones/Panel',
@@ -247,14 +274,14 @@ const C={
   SW:'1Ygc9G6WsBnEylo-P-rvrO-l3dctIUy6B9jMc_JDBLug',
   SR:'1J84a1R-ciIJXeF3BIS5joUWU2grGfbHtP7y6UA6MdJg',
   MAX_E:10, MAX_S:5, LS:'syscorp_processed', LS_MAX:300,
-  // Cols Sheet SUBIR (0-based): C=2 código, N=13 parte, S=18 precio, T=19 días, U=20 desc, V=21 disp, W=22 obs
-  SC:{SOL:2,COD:13,PRECIO:18,DIAS:19,DESC:20,DISP:21,OBS:22}
+  SC:{SOL:2,COD:13,PRECIO:18,DIAS:19,DESC:20,DISP:21,OBS:22},
+  CLAUDE_MODEL:'claude-sonnet-4-20250514'
 };
 
-/* ══ ESTADO ══ */
+/* ▲▲ ESTADO ▲▲ */
 const S={busy:false,ext:0,sub:0,err:0,idx:new Set(),queue:[],op:'ext',recs:[]};
 
-/* ══ UI ══ */
+/* ▲▲ UI HELPERS ▲▲ */
 function $(id){return document.getElementById(id);}
 function log(t,m){
   const el=$('log'),d=document.createElement('div');
@@ -273,22 +300,72 @@ function prog(p,l){$('pb').style.width=p+'%';$('pl').textContent=l;}
 function ui(){
   $('me').textContent=S.ext;$('ms').textContent=S.sub;$('merr').textContent=S.err;$('mi').textContent=S.idx.size;
   $('kc').textContent=S.idx.size;
-  const qb=$('qb');
-  if(S.queue.length){qb.textContent=S.queue.length;qb.style.display='';}else{qb.style.display='none';}
-  renderQueue();
+  const cola=$('card-cola');
+  if(S.queue.length){
+    cola.style.display='';
+    $('qb').textContent=S.queue.length;
+    $('queue-list').innerHTML=S.queue.slice(0,5).map(id=>`<div style="padding:3px 0">${id}</div>`).join('')+(S.queue.length>5?`<div style="color:var(--hi)">...y ${S.queue.length-5} más</div>`:'');
+  }else{cola.style.display='none';}
+  renderFlujoPasos();
 }
+
+/* ▲▲ FLUJO PASOS POR MODO ▲▲ */
+const FLUJOS = {
+  ext: [
+    {n:1, title:'Abrí SysCorp Panel', desc:'Tocá el botón de abajo para abrir SysCorp en otra pestaña.', action:'btn', btnText:'Abrir SysCorp Panel', btnFn:'openSysCorpPanel()', color:'gr'},
+    {n:2, title:'Ejecutá DIMA-Panel en SysCorp', desc:'En SysCorp: abrí el Panel de cotizaciones → tocá el ícono de compartir (⋮) → "Ejecutar bookmarklet" o pegá el código en la barra de URL.', desc2:'<b>Alternativa:</b> En la barra de URL escribí <code>javascript:</code> y pegá el código del bookmarklet DIMA-PANEL.', color:'am'},
+    {n:3, title:'Copiá el TSV al portapapeles', desc:'Cuando aparezca el toast verde en SysCorp, los datos están copiados. Volvé a esta pestaña.', color:'am'},
+    {n:4, title:'Tocá EJECUTAR', desc:'La app lee el portapapeles, extrae las cotizaciones nuevas y las agrega al Sheet.', action:'fab', color:'gr'},
+  ],
+  ia: [
+    {n:1, title:'Abrí SysCorp Panel', desc:'Tocá para abrir SysCorp Panel en otra pestaña.', action:'btn', btnText:'Abrir SysCorp Panel', btnFn:'openSysCorpPanel()', color:'gr'},
+    {n:2, title:'Ejecutá DIMA-Panel', desc:'En SysCorp pegá el código DIMA-PANEL en la barra de URL. Cuando veas el toast verde, los datos están copiados.', color:'am'},
+    {n:3, title:'Habilitá popups de SysCorp', desc:'Chrome Android bloquea popups. Tocá el ícono de candado en la barra de URL → Permisos → Ventanas emergentes → Permitir.', color:'rd'},
+    {n:4, title:'Tocá EJECUTAR — IA-Piloto', desc:'La IA procesa todas las cotizaciones automáticamente: prioriza, abre cada detalle, clasifica partes con IA, copia el TSV completo.', action:'fab', color:'pu'},
+  ],
+  sub: [
+    {n:1, title:'Completá Sheet SUBIR', desc:'Abrí la Sheet SUBIR y completá las columnas PRECIO, DIAS, DESC, DISP para cada parte.', action:'btn', btnText:'Abrir Sheet SUBIR', btnFn:"openSheet('R')", color:'bl'},
+    {n:2, title:'Habilitá popups de SysCorp', desc:'Chrome Android necesita permisos de popup para syscorpla.com. Candado → Permisos → Ventanas emergentes → Permitir.', color:'rd'},
+    {n:3, title:'Tocá EJECUTAR — Subir', desc:'La app lee la Sheet SUBIR y abre cada cotización para ingresar los precios automáticamente.', action:'fab', color:'bl'},
+  ]
+};
+
+function renderFlujoPasos(){
+  const pasos = FLUJOS[S.op] || FLUJOS.ext;
+  const container = $('steps-container');
+  container.innerHTML = pasos.map((p,i)=>{
+    const estado = i===0 ? 'active' : 'wait';
+    const actionHTML = p.action==='btn' ? 
+      `<div class="step-action"><button class="btn ${p.color}" style="padding:12px;font-size:12px;min-height:44px" onclick="${p.btnFn}">${p.btnText}</button></div>` : 
+      p.action==='fab' ? `<div class="step-action" style="font-size:11px;color:var(--hi);font-family:var(--mono)">↓ usa el botón verde de abajo</div>` : '';
+    return `<div class="step-row">
+      <div class="step-num ${estado}">${p.n}</div>
+      <div class="step-body">
+        <div class="step-title">${p.title}</div>
+        <div class="step-desc">${p.desc}${p.desc2?'<br><br>'+p.desc2:''}</div>
+        ${actionHTML}
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function setOp(op){
   S.op=op;
-  $('ch-ext').className='chip'+(op==='ext'?' ext':'');
-  $('ch-sub').className='chip'+(op==='sub'?' sub':'');
-  if($('ch-auto'))$('ch-auto').className='chip'+(op==='auto'?' ext':'');
-  $('mbadge').textContent=op==='ext'?'EXTRAER':op==='auto'?'AUTO-DETALLE':'SUBIR';
-  $('mbadge').className='badge '+(op==='ext'||op==='auto'?'bg':'bb');
+  $('ch-ext').className='mode'+(op==='ext'?' ext':'');
+  $('ch-sub').className='mode'+(op==='sub'?' sub':'');
+  $('ch-ia').className='mode'+(op==='ia'?' ia':'');
+  $('mbadge').textContent=op==='ext'?'EXTRAER':op==='ia'?'IA-PILOTO':'SUBIR';
+  $('mbadge').className='badge '+(op==='ext'?'bg':op==='ia'?'bp':'bb');
+  const fab=$('fab');
+  fab.className='fab-btn'+(op==='ia'?' ia-mode':op==='sub'?' sub-mode':'');
+  fab.textContent=op==='ext'?'▶ EJECUTAR EXTRACCIÓN':op==='ia'?'🤖 EJECUTAR IA-PILOTO':'▶ EJECUTAR SUBIDA';
+  renderFlujoPasos();
 }
+
 function openSheet(t){try{window.open('https://docs.google.com/spreadsheets/d/'+(t==='W'?C.SW:C.SR),'_blank');}catch(e){}}
 function openSysCorpPanel(){try{window.open(C.BASE+C.PANEL,'_blank');}catch(e){}}
 
-/* ══ ÍNDICE LOCAL ══ */
+/* ▲▲ ÍNDICE LOCAL ▲▲ */
 function guardarIdx(){
   const now=new Date().toLocaleString('es-CR',{timeZone:'America/Costa_Rica'});
   const ids=[...S.idx].slice(-C.LS_MAX);S.idx=new Set(ids);
@@ -299,7 +376,7 @@ function cargarIdx(){
   try{
     const r=localStorage.getItem(C.LS);
     if(r){const p=JSON.parse(r);S.idx=new Set(p.ids||[]);$('ks').textContent=p.sync||'—';$('ke').textContent='OK';log('inf',`Índice: ${S.idx.size} IDs`);}
-    else{log('wrn','Sin índice — primer uso');$('ke').textContent='Primera vez';}
+    else{log('wrn','Sin índice — primer uso');$('ke').textContent='Primer uso';}
   }catch(e){log('err','cargarIdx: '+e.message);}
   ui();
 }
@@ -311,222 +388,157 @@ function doReset(){
   log('wrn','Índice borrado. Próxima extracción: todo desde cero.');
 }
 
-/* ══ RENDER ══ */
+/* ▲▲ RENDER COTIZACIONES ▲▲ */
 function renderCots(cots){
   const el=$('cot-list');
   $('recbadge').textContent=cots.length;
   $('recbadge').style.cssText=cots.length?'background:var(--gr2);color:var(--gr)':'background:var(--s3);color:var(--mu)';
   if(!cots.length){el.innerHTML='<div class="empty">⬡ Sin cotizaciones</div>';return;}
-  el.innerHTML=cots.map(function(c){
+  el.innerHTML=cots.map(c=>{
     const yaProc=S.idx.has(String(c.Id));
     const part=c.TakingPart==='SI';
     const reab=(c.Code||'').includes('Reabierto')||c.isReabierto;
     const dc=part?'part':yaProc?'done':'open';
     const placa=(c.LicensePlate||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-');
     const v=c.Vehicle||{};
-    return '<div class="cot-item" onclick="openCot('+c.Id+','+c.CompanyId+')">'
-      +'<div class="cdot '+dc+'"></div>'
-      +'<div class="cbody">'
-        +'<div style="display:flex;align-items:center;gap:5px">'
-          +'<span class="ccode">'+(c.Code||String(c.Id))+'</span>'
-          +(part?'<span class="ctag p">PART.</span>':'')
-          +(!yaProc&&!part?'<span class="ctag n">NUEVA</span>':'')
-          +(reab?'<span class="ctag r">REABIERTO</span>':'')
-        +'</div>'
-        +'<div class="ctitle">'+placa+' · '+(v.Brand||'')+' '+(v.Model||'')+' '+(v.Year||'')+'</div>'
-        +'<div class="cmeta"><span>'+(c.strCompany||'')+'</span><span>'+(c.SinisterId?'Caso:'+c.SinisterId:'')+'</span><span>'+(c.ItemsQty||0)+' partes</span></div>'
-      +'</div>'
-      +'<div class="cright"><div class="cdate">'+(c.EndDate||'')+'</div><div class="carrow">›</div></div>'
-    +'</div>';
+    return `<div class="cot-item" onclick="openCot(${c.Id},${c.CompanyId})">
+      <div class="cdot ${dc}"></div>
+      <div class="cbody">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="ccode">${c.Code||String(c.Id)}</span>
+          ${part?'<span class="ctag p">PART.</span>':''}
+          ${!yaProc&&!part?'<span class="ctag n">NUEVA</span>':''}
+          ${reab?'<span class="ctag r">REABIERTO</span>':''}
+        </div>
+        <div class="ctitle">${placa} · ${v.Brand||''} ${v.Model||''} ${v.Year||''}</div>
+        <div class="cmeta"><span>${c.strCompany||''}</span>${c.SinisterId?`<span>Caso:${c.SinisterId}</span>`:''}</div>
+      </div>
+      <div class="cright"><div class="cdate">${c.EndDate||''}</div><div class="carrow">›</div></div>
+    </div>`;
   }).join('');
 }
 function openCot(id,cid){try{window.open(C.BASE+C.APPLY+'?q='+id+'&c='+cid,'_blank');}catch(e){}}
-function renderQueue(){
-  const el=$('queue-list');
-  if(!S.queue.length){el.innerHTML='<span style="color:var(--hi);font-family:var(--mono);font-size:10px">Vacía</span>';return;}
-  el.innerHTML=S.queue.map(function(id){return'<div style="padding:4px 0;font-size:10px;font-family:var(--mono);color:var(--mu)">'+id+'</div>';}).join('');
-}
-function doStatus(){
-  log('inf','── ESTADO ──');
-  log('inf','Op:'+S.op.toUpperCase()+' Ext:'+S.ext+' Sub:'+S.sub+' Err:'+S.err);
-  log('inf','Índice:'+S.idx.size+' Cola:'+S.queue.length+' Recs:'+S.recs.length);
-  if(S.queue.length)log('wrn','Cola:'+S.queue.slice(0,5).join(','+(S.queue.length>5?'…':'')));
+
+/* ▲▲ PARSEAR TSV ▲▲ */
+function parseTSV(txt){
+  const lines=txt.trim().split('\n'),cots=[];
+  for(let i=0;i<lines.length;i++){
+    const c=lines[i].split('\t');
+    if(c.length<3)continue;
+    if(c[1]==='SYSCORP'){
+      const meta=(c[25]||'').split('|');
+      const id=meta[0]||c[2];
+      const cid=parseInt(meta[1])||0;
+      cots.push({Id:id,CompanyId:cid,Code:c[2],strCompany:c[3]||'',SinisterId:c[4]||'',
+        LicensePlate:c[5]||'',Vehicle:{Brand:c[6]||'',Model:c[7]||'',Year:c[8]||'',VIN:c[9]||''},
+        StartDate:c[10]||'',EndDate:c[11]||'',TakingPart:'NO',_row:c});
+    }
+  }
+  return cots;
 }
 
-/* ══ CLIPBOARD ══ */
+/* ▲▲ CLIPBOARD ▲▲ */
 function copiarTexto(txt){
-  if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(txt).then(function(){return true;}).catch(function(){return copiarFB(txt);});
+  if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(txt).then(()=>true).catch(()=>copiarFB(txt));
   return Promise.resolve(copiarFB(txt));
 }
 function copiarFB(txt){
   try{var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:50%;left:50%;width:2px;height:2px;opacity:.01;font-size:12px';document.body.appendChild(ta);ta.focus();ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}
 }
 function fetchT(url,opts,ms){
-  ms=ms||12000;var ctrl=new AbortController();var tid=setTimeout(function(){ctrl.abort();},ms);
+  ms=ms||12000;var ctrl=new AbortController();var tid=setTimeout(()=>ctrl.abort(),ms);
   var o=Object.assign({},opts||{},{signal:ctrl.signal});
-  return fetch(url,o).finally(function(){clearTimeout(tid);});
+  return fetch(url,o).finally(()=>clearTimeout(tid));
 }
 
-/* ══ PARSEAR TSV DEL BOOKMARKLET ══ */
-function parseTSV(txt){
-  var lines=txt.trim().split('\n'),cots=[];
-  for(var i=0;i<lines.length;i++){
-    var c=lines[i].split('\t');
-    if(c.length<3)continue;
-    // Formato generado: col[1]='SYSCORP', col[25]=ID|CompanyId (metadatos)
-    if(c[1]==='SYSCORP'){
-      var meta=(c[25]||'').split('|');
-      var id=meta[0]||c[2];
-      var cid=parseInt(meta[1])||0;
-      cots.push({Id:id,CompanyId:cid,Code:c[2],strCompany:c[3]||'',SinisterId:c[4]||'',
-        LicensePlate:c[5]||'',Vehicle:{Brand:c[6]||'',Model:c[7]||'',Year:c[8]||'',VIN:c[9]||''},
-        StartDate:c[10]||'',EndDate:c[11]||'',TakingPart:'NO',
-        _row:c  // fila completa para reutilizar en TSV de Sheet
-      });
-    }
-  }
-  return cots;
-}
+/* ▲▲ EXTRAER DETALLE (ANDROID: usa iframe en lugar de popup) ▲▲ */
+async function extraerDetalleCot(id, cid, fecha){
+  // ANDROID: window.open funciona si viene de un gesto del usuario (tap)
+  // Usamos una ventana que se abre durante el loop iniciado por el tap
+  const win = window.open(
+    C.BASE+C.APPLY+'?q='+encodeURIComponent(id)+'&c='+encodeURIComponent(cid),
+    '_det_'+id, 'width=1024,height=700'
+  );
+  if(!win) throw new Error('Popup bloqueado — permití popups para syscorpla.com en Configuración del sitio');
 
-/* ══ BOOKMARKLETS ══ */
-function bmPanel(){
-  // Validado en vivo: usa $('#tbRecently').bootstrapTable('getData'), col Z = ID|CompanyId
-  var code='(function(){'
-    +'var d=$(\'#tbRecently\').bootstrapTable(\'getData\');'
-    +'if(!d||!d.length){alert(\'DIMA-PANEL: no hay cotizaciones en la tabla\');return;}'
-    +'var fecha=new Date().toLocaleDateString(\'es-CR\',{timeZone:\'America/Costa_Rica\',day:\'2-digit\',month:\'2-digit\',year:\'numeric\'});'
-    +'function cp(p){return(p||"").replace(/^P\\s*-\\s*/,"").replace(/^CL\\s*-\\s*/,"CL-").trim();}'
-    +'function pd(s){if(!s)return"";if(s.indexOf("Date(")>-1){var ms=parseInt(s.match(/-?\\d+/)[0]);return ms<=0?"":new Date(ms).toLocaleDateString("es-CR",{timeZone:"America/Costa_Rica",day:"2-digit",month:"2-digit",year:"numeric"});}return s;}'
-    +'var rows=d.map(function(r){'
-      +'var v=r.Vehicle||{};'
-      +'return [fecha,"SYSCORP",r.Code||String(r.Id),r.strCompany||"",r.SinisterId||"",'
-        +'cp(r.LicensePlate),v.Brand||"",v.Model||"",String(v.Year||""),v.VIN||r.VIN||"",'
-        +'r.StartDate||"",pd(r.CloseDate||""),(r.BodyShop&&r.BodyShop.Name)||"",'
-        +'"","","","","1","","","","","","","",String(r.Id)+"|"+String(r.CompanyId)];'
-    +'});'
-    +'var tsv=rows.map(function(r){return r.map(function(v){return(v==null?"":String(v)).replace(/[\\t\\r\\n]/g," ");}).join("\\t");}).join("\\n");'
-    +'var ta=document.createElement("textarea");ta.value=tsv;ta.style.cssText="position:fixed;top:0;left:0;width:2px;height:2px;opacity:.01;font-size:12px";'
-    +'document.body.appendChild(ta);ta.focus();ta.select();'
-    +'var ok=false;try{ok=document.execCommand("copy");}catch(e){}'
-    +'document.body.removeChild(ta);'
-    +'if(!ok&&navigator.clipboard)navigator.clipboard.writeText(tsv).catch(function(){});'
-    +'var div=document.createElement("div");'
-    +'div.style.cssText="position:fixed;bottom:20px;right:20px;z-index:99999;background:"+(ok?"#00d68f":"#ffb830")+";color:#0c0e12;padding:14px 18px;border-radius:8px;font-family:monospace;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;max-width:280px;text-align:center;";'
-    +'div.textContent=(ok?"✓ "+rows.length+" cots copiadas\\nVolvé a DIMA → SCAN PANEL":"⚠ "+rows.length+" cots\\nClipboard bloqueado - tocá para reintentar");'
-    +'div.onclick=function(){var ta2=document.createElement("textarea");ta2.value=tsv;ta2.style.cssText="position:fixed;top:0;left:0;width:2px;height:2px;opacity:.01;";document.body.appendChild(ta2);ta2.focus();ta2.select();document.execCommand("copy");document.body.removeChild(ta2);if(navigator.clipboard)navigator.clipboard.writeText(tsv).catch(function(){});};'
-    +'document.body.appendChild(div);'
-    +'setTimeout(function(){if(div.parentNode)div.parentNode.removeChild(div);},8000);'
-  +'})();';
-  return 'javascript:'+encodeURIComponent(code);
-}
-
-function bmDetalle(){
-  // Bookmarklet para /Aplicar — extrae partes de UNA cotización con datos del header
-  // Selectores validados: label nextElementSibling, tr[data-index], #dtPrice/#dtDays/#dtPercent/#slType/checkbox
-  var code='(function(){'
-    +'var rows=[...document.querySelectorAll("tr[data-index]")];'
-    +'if(!rows.length){alert("DIMA-DETALLE: no hay partes en esta cotización");return;}'
-    +'var url=new URL(location.href);'
-    +'var q=url.searchParams.get("q")||"";'
-    +'var c=url.searchParams.get("c")||"";'
-    +'var fecha=new Date().toLocaleDateString("es-CR",{timeZone:"America/Costa_Rica",day:"2-digit",month:"2-digit",year:"numeric"});'
-    // Leer datos del header via labels (validado: label.nextElementSibling)
-    +'function glabel(txt){var els=[...document.querySelectorAll("label")];var el=els.find(function(e){return e.innerText.trim().replace(/:| /g,"").toLowerCase()===txt.toLowerCase();});return el&&el.nextElementSibling?el.nextElementSibling.innerText.trim():""}'
-    +'var comp=glabel("Compañia")||glabel("Compania");'
-    +'var sol=glabel("Solicitud")||q;'
-    +'var taller=glabel("Taller");'
-    +'var vin=glabel("VIN");'
-    +'var placa=(glabel("Placa")||"").replace(/^P\\s*-\\s*/,"").replace(/^CL\\s*-\\s*/,"CL-").trim();'
-    +'var caso=glabel("Siniestro")||glabel("Caso");'
-    +'var marca=glabel("Marca");'
-    +'var modelo=glabel("Modelo");'
-    +'var anio=glabel("Año")||glabel("Ano");'
-    +'var qualMap={"":"NA","1":"ORIGINAL","2":"GENERICO","3":"USADO"};'
-    +'var tipoMap={"1":"Suministro","2":"Repuesto"};'
-    +'var data=rows.map(function(tr){'
-      +'var tds=[...tr.querySelectorAll("td")];'
-      +'var cod=tds[0]?tds[0].innerText.trim():"";'
-      // [BLOCKED] en desc → usar innerText del DOM directamente
-      +'var desc=tds[1]?tds[1].innerText.trim():"";'
-      +'var slT=tr.querySelector("#slType");'
-      +'var slQ=tr.querySelector("#slTypesQuotation");'
-      +'var dtP=tr.querySelector("#dtPrice");'
-      +'var dtD=tr.querySelector("#dtDays");'
-      +'var dtPc=tr.querySelector("#dtPercent");'
-      +'var cb=tr.querySelector("input[type=checkbox]");'
-      +'return [fecha,"SYSCORP",sol,comp,caso,placa,marca,modelo,anio,vin,'
-        +'"","",taller,'
-        +'cod,desc,slT?qualMap[slT.value]||"":"",slQ?tipoMap[slQ.value]||"":"","1",'
-        +'dtP?dtP.value:"",dtD?dtD.value:"",dtPc?dtPc.value:"",cb?(cb.checked?"SI":"NO"):"",'
-        +'"","","",q+"|"+c];'
-    +'});'
-    +'var tsv=data.map(function(r){return r.map(function(v){return(v==null?"":String(v)).replace(/[\\t\\r\\n]/g," ");}).join("\\t");}).join("\\n");'
-    +'var ta=document.createElement("textarea");ta.value=tsv;ta.style.cssText="position:fixed;top:0;left:0;width:2px;height:2px;opacity:.01;font-size:12px";'
-    +'document.body.appendChild(ta);ta.focus();ta.select();'
-    +'var ok=false;try{ok=document.execCommand("copy");}catch(e){}'
-    +'document.body.removeChild(ta);'
-    +'if(!ok&&navigator.clipboard)navigator.clipboard.writeText(tsv).catch(function(){});'
-    +'var div=document.createElement("div");'
-    +'div.style.cssText="position:fixed;bottom:20px;right:20px;z-index:99999;background:"+(ok?"#00d68f":"#ffb830")+";color:#0c0e12;padding:14px 18px;border-radius:8px;font-family:monospace;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer;";'
-    +'div.textContent=(ok?"✓ "+data.length+" partes copiadas\\nVolvé a DIMA → SCAN PANEL":"⚠ "+data.length+" partes - clipboard bloqueado");'
-    +'document.body.appendChild(div);'
-    +'setTimeout(function(){if(div.parentNode)div.parentNode.removeChild(div);},6000);'
-  +'})();';
-  return 'javascript:'+encodeURIComponent(code);
-}
-
-function showBM(){
-  $('bm-panel').textContent=bmPanel();
-  $('bm-detalle').textContent=bmDetalle();
-  $('ov-bm').classList.add('open');
-}
-function copiarBM(tipo){
-  var bm=tipo==='panel'?bmPanel():bmDetalle();
-  copiarTexto(bm).then(function(ok){
-    if(ok)log('ok','Código '+(tipo==='panel'?'DIMA-PANEL':'DIMA-DETALLE')+' copiado — pegalo como URL del favorito');
-    else log('wrn','Copiá manualmente el código del bloque de texto del modal');
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>{try{win.close();}catch(e){}rej(new Error('Timeout 25s'));},25000);
+    const iv=setInterval(()=>{
+      try{
+        if(win.closed){clearInterval(iv);clearTimeout(t);rej(new Error('Ventana cerrada'));return;}
+        if(win.document.querySelectorAll('tr[data-index]').length>0&&win.document.readyState==='complete'){
+          clearInterval(iv);clearTimeout(t);res();
+        }
+      }catch(e){}
+    },400);
   });
+
+  function gl(txt){const els=[...win.document.querySelectorAll('label')];const el=els.find(e=>e.innerText.trim().replace(/:| /g,'').toLowerCase()===txt.toLowerCase());return el&&el.nextElementSibling?el.nextElementSibling.innerText.trim():'';}
+  const sol=gl('Solicitud')||String(id),comp=gl('Compañia')||gl('Compania'),caso=gl('Siniestro')||gl('Caso');
+  const placa=(gl('Placa')||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-').trim();
+  const marca=gl('Marca'),modelo=gl('Modelo'),anio=gl('Año')||gl('Ano'),vin=gl('VIN'),taller=gl('Taller');
+  const qM={'':'NA','1':'ORIGINAL','2':'GENERICO','3':'USADO'};
+  const tM={'1':'Suministro','2':'Repuesto'};
+
+  const filas=[...win.document.querySelectorAll('tr[data-index]')].map(tr=>{
+    const tds=[...tr.querySelectorAll('td')];
+    const slT=tr.querySelector('#slType'),slQ=tr.querySelector('#slTypesQuotation');
+    const dtP=tr.querySelector('#dtPrice'),dtD=tr.querySelector('#dtDays'),dtPc=tr.querySelector('#dtPercent');
+    const cb=tr.querySelector('input[type=checkbox]');
+    return [fecha,'SYSCORP',sol,comp,caso,placa,marca,modelo,anio,vin||'','','',taller,
+      tds[0]?tds[0].innerText.trim():'',tds[1]?tds[1].innerText.trim():'',
+      slT?qM[slT.value]||'':'',slQ?tM[slQ.value]||'':'','1',
+      dtP?dtP.value:'',dtD?dtD.value:'',dtPc?dtPc.value:'',
+      cb?(cb.checked?'SI':'NO'):'','','','',String(id)+'|'+String(cid)];
+  });
+  win.close();
+  return filas;
 }
 
-/* ══ SCAN PANEL — lee portapapeles (post-bookmarklet) ══ */
-async function doScan(){
-  log('inf','── SCAN PANEL ──');
+/* ▲▲ CLAUDE IA ▲▲ */
+async function claudeIA(prompt, sys){
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:C.CLAUDE_MODEL,max_tokens:1000,
+      system:sys||'Respondés SOLO en JSON sin backticks.',
+      messages:[{role:'user',content:prompt}]})
+  });
+  const d=await resp.json();
+  const txt=d.content?.map(c=>c.text||'').join('')||'';
+  try{return JSON.parse(txt.replace(/```json|```/g,'').trim());}catch(e){return {raw:txt};}
+}
+
+async function iaClasificarPartes(filas, vehiculo){
+  const partes=filas.slice(0,35).map((r,i)=>({i,cod:r[13],desc:r[14]}));
+  const prompt='Vehículo: '+vehiculo+'\nPartes:\n'+JSON.stringify(partes)+'\n\nSugerí calidad óptima (ORIGINAL/GENERICO/USADO) y observación corta (≤30 chars). SOLO JSON array: [{"i":0,"calidad":"ORIGINAL","obs":""},...]';
   try{
-    if(!navigator.clipboard) throw new Error('Clipboard API no disponible');
-    const txt=await navigator.clipboard.readText();
-    if(!txt.trim()||!txt.includes('SYSCORP')){
-      log('wrn','Portapapeles vacío o sin datos SYSCORP');
-      log('inf','Flujo: abrí SysCorp Panel → ejecutá favorito DIMA-PANEL → volvé acá → SCAN PANEL');
-      log('inf','Sin el bookmarklet: tocá BOOKMARKLETS para instalarlo primero');
-      dot('ok','Esperando bookmarklet'); prog(0,'Ejecutar DIMA-PANEL primero');
-      return;
-    }
-    const cots=parseTSV(txt);
-    if(!cots.length){log('wrn','No se reconocieron cotizaciones — revisá que ejecutaste DIMA-PANEL (no DIMA-DETALLE)');return;}
-    S.recs=cots;
-    renderCots(cots);
-    log('ok',cots.length+' cotizaciones cargadas desde portapapeles');
-    dot('ok','Panel escaneado'); prog(100,cots.length+' cotizaciones');
-  }catch(e){
-    log('err','Scan: '+e.message);
-    log('inf','TIP: el bookmarklet copia los datos al portapapeles automáticamente');
-    dot('ok','Usar bookmarklet'); prog(0,'—');
-  }
+    const res=await claudeIA(prompt,'Experto en repuestos automotrices CR. Piezas de seguridad/estructurales=ORIGINAL. Carrocería exterior=GENERICO. Bajo impacto=USADO. SOLO JSON array.');
+    return Array.isArray(res)?res:[];
+  }catch(e){return [];}
 }
 
-/* ══ LEER SHEET SUBIR (gviz/tq con cookies Google) ══ */
+async function iaPriorizar(cots){
+  const resumen=cots.slice(0,15).map(c=>({id:c.Id,code:c.Code,marca:c.Vehicle.Brand,modelo:c.Vehicle.Model,anio:c.Vehicle.Year,cia:c.strCompany}));
+  const prompt='Cotizaciones:\n'+JSON.stringify(resumen)+'\n\nOrdenálas por prioridad (vehículos nuevos y marcas comunes en CR primero). SOLO JSON array de IDs: ["id1","id2",...]';
+  try{
+    const res=await claudeIA(prompt,'Experto en cotizaciones CR. Priorizás vehículos nuevos y marcas disponibles (Toyota,Hyundai,Kia,Honda,Nissan). SOLO JSON array.');
+    return Array.isArray(res)?res.map(String):[];
+  }catch(e){return [];}
+}
+
+/* ▲▲ LEER SHEET SUBIR ▲▲ */
 async function leerSheetSubir(){
   const url='https://docs.google.com/spreadsheets/d/'+C.SR+'/gviz/tq?tqx=out:json&headers=1';
   const r=await fetchT(url,{credentials:'include'},12000);
-  if(!r.ok) throw new Error('HTTP '+r.status+' — ¿Estás logueado en Google?');
+  if(!r.ok)throw new Error('HTTP '+r.status+' — ¿estás logueado en Google?');
   const txt=await r.text();
   const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);\s*$/);
-  if(!m) throw new Error('Formato gviz inesperado');
+  if(!m)throw new Error('Formato gviz inesperado');
   const data=JSON.parse(m[1]);
   const rows=data.table?.rows||[];
-  log('inf','Sheet SUBIR: '+rows.length+' filas totales');
+  log('inf','Sheet SUBIR: '+rows.length+' filas');
   const sc=C.SC;
-  return rows.map(function(row){
+  return rows.map(row=>{
     const c=row.c||[];
     return {
       sol:(c[sc.SOL]?.v||'').toString().trim(),
@@ -537,17 +549,16 @@ async function leerSheetSubir(){
       disp:(c[sc.DISP]?.v||'SI').toString().trim()||'SI',
       obs:(c[sc.OBS]?.v||'').toString().trim()
     };
-  }).filter(function(r){return r.sol&&r.cod&&r.precio;});
+  }).filter(r=>r.sol&&r.cod&&r.precio);
 }
 
-/* ══ SUBIR PRECIO A SYSCORP ══ */
-// Método batch validado en vivo en SysCorp
-function setBV(input, value){
+/* ▲▲ SUBIR PRECIO ▲▲ */
+function setBV(input,value){
   const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
   setter.call(input,value);
   input.dispatchEvent(new Event('input',{bubbles:true}));
   input.dispatchEvent(new Event('change',{bubbles:true}));
-  input.dispatchEvent(new Event('blur',{bubbles:true})); // CRÍTICO en SysCorp
+  input.dispatchEvent(new Event('blur',{bubbles:true}));
 }
 function setSel(sel,value){
   const setter=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set;
@@ -555,85 +566,46 @@ function setSel(sel,value){
   sel.dispatchEvent(new Event('change',{bubbles:true}));
 }
 
-async function subirEnVentana(row, companyId){
-  const win=window.open(
-    C.BASE+C.APPLY+'?q='+encodeURIComponent(row.sol)+'&c='+encodeURIComponent(companyId),
-    'sc_'+row.sol, 'width=900,height=700'
-  );
-  if(!win) throw new Error('Popup bloqueado — habilitá popups para syscorpla.com en Chrome');
-
-  // Esperar carga + validar URL
-  await new Promise(function(res,rej){
-    const t=setTimeout(function(){rej(new Error('Timeout'));},20000);
-    const iv=setInterval(function(){
+async function subirEnVentana(row,companyId){
+  const win=window.open(C.BASE+C.APPLY+'?q='+encodeURIComponent(row.sol)+'&c='+encodeURIComponent(companyId),'sc_'+row.sol,'width=900,height=700');
+  if(!win)throw new Error('Popup bloqueado');
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>{win.close();res('timeout');},20000);
+    const iv=setInterval(()=>{
       try{
-        if(win.closed){clearInterval(iv);clearTimeout(t);rej(new Error('Ventana cerrada'));return;}
+        if(win.closed){clearInterval(iv);clearTimeout(t);res('closed');return;}
         const url=win.location.href;
         if(url.includes('/Finalizada')){clearInterval(iv);clearTimeout(t);win.close();rej(new Error('Finalizada — skip'));return;}
         if(url.includes('/Aplicar')&&win.document.querySelectorAll('tr[data-index]').length>0){clearInterval(iv);clearTimeout(t);res();}
       }catch(e){}
     },400);
   });
-
-  // Verificar timer — si 00 días y 00 horas y 00 mins → expirado
-  try{
-    const countEls=[...win.document.querySelectorAll('.countdown > span')];
-    if(countEls.length>=3){
-      const dias=parseInt(countEls[0]?.innerText||'1');
-      const horas=parseInt(countEls[2]?.innerText||'1');
-      const mins=parseInt(countEls[4]?.innerText||'1');
-      if(dias===0&&horas===0&&mins<=0){win.close();throw new Error('Timer expirado — skip');}
-    }
-  }catch(e){if(e.message.includes('skip'))throw e;}
-
-  // Buscar la fila por código de parte
   const allRows=[...win.document.querySelectorAll('tr[data-index]')];
-  let tr=allRows.find(function(r){
-    const td=r.querySelector('td');
-    return td&&td.innerText.trim()===row.cod;
-  });
-  if(!tr){
-    log('wrn',row.sol+'/'+row.cod+': no encontrado por código → usando fila 0');
-    tr=allRows[0];
-  }
-  if(!tr){win.close();throw new Error('Sin filas en la cotización');}
-
-  // Setear campos con método batch validado
-  const dtP=tr.querySelector('#dtPrice');
-  const dtD=tr.querySelector('#dtDays');
-  const dtPc=tr.querySelector('#dtPercent');
-  const slT=tr.querySelector('#slType');
-  const cb=tr.querySelector('input[type="checkbox"]');
-
+  let tr=allRows.find(r=>{const td=r.querySelector('td');return td&&td.innerText.trim()===row.cod;});
+  if(!tr){log('wrn',row.sol+'/'+row.cod+': no encontrado → fila 0');tr=allRows[0];}
+  if(!tr){win.close();throw new Error('Sin filas');}
+  const dtP=tr.querySelector('#dtPrice'),dtD=tr.querySelector('#dtDays'),dtPc=tr.querySelector('#dtPercent');
+  const slT=tr.querySelector('#slType'),cb=tr.querySelector('input[type=checkbox]');
   if(dtP)setBV(dtP,row.precio);
   if(dtD)setBV(dtD,row.dias);
   if(dtPc)setBV(dtPc,row.desc);
-  if(slT&&row.calidad)setSel(slT,row.calidad); // "1"=ORIG "2"=GEN "3"=USADO
   if(cb){const shouldCheck=(row.disp||'SI').toUpperCase()==='SI';if(cb.checked!==shouldCheck)cb.click();}
-
-  await new Promise(function(r){setTimeout(r,350);});
-
-  // Click ACTUALIZAR (#cot-btn-Apply validado en vivo)
+  await new Promise(r=>setTimeout(r,350));
   const btn=win.document.querySelector('#cot-btn-Apply');
   if(!btn){win.close();throw new Error('Botón ACTUALIZAR no encontrado');}
   btn.click();
-
-  // Esperar modal resultado
-  await new Promise(function(res,rej){
-    const t=setTimeout(function(){win.close();res('timeout');},8000);
-    const iv=setInterval(function(){
+  await new Promise((res,rej)=>{
+    const t=setTimeout(()=>{win.close();res('timeout');},8000);
+    const iv=setInterval(()=>{
       try{
         const modal=win.document.querySelector('.modal.show,[class*="modal"][style*="block"]');
         if(modal){
           const txt=modal.innerText||'';
           if(txt.toLowerCase().includes('error')){
-            // ERROR → cerrar con X, nunca con ACEPTAR
             const x=modal.querySelector('.close,[data-dismiss="modal"],[aria-label="Close"]');
             if(x)x.click();
-            clearInterval(iv);clearTimeout(t);win.close();
-            rej(new Error('Error SYSCORP: '+txt.slice(0,80)));
+            clearInterval(iv);clearTimeout(t);win.close();rej(new Error('Error SysCorp: '+txt.slice(0,60)));
           }else{
-            // ÉXITO → click ACEPTAR
             const ok=modal.querySelector('.btn-primary,.btn-success,[id*="ok"],[id*="accept"],[id*="confirm"]');
             if(ok)ok.click();
             clearInterval(iv);clearTimeout(t);win.close();res('ok');
@@ -646,324 +618,256 @@ async function subirEnVentana(row, companyId){
   return true;
 }
 
-/* ══ EXTRAER ══ */
+/* ▲▲ DOEXTRAER ▲▲ */
 async function doExtraer(){
-  S.busy=true;dot('busy','Extrayendo…');$('btn-run').disabled=true;
-  log('inf','── EXTRACCIÓN SYSCORP ──');prog(5,'Leyendo portapapeles…');
+  S.busy=true;dot('busy','Extrayendo…');$('fab').disabled=true;
+  log('inf','━━ EXTRACCIÓN SYSCORP ━━');prog(5,'Leyendo portapapeles…');
   try{
-    if(!navigator.clipboard) throw new Error('Clipboard API no disponible');
+    if(!navigator.clipboard)throw new Error('Clipboard API no disponible');
     const txt=await navigator.clipboard.readText();
     if(!txt.trim()||!txt.includes('SYSCORP')){
       log('wrn','Portapapeles vacío — ejecutá DIMA-PANEL en SysCorp primero');
-      log('inf','Pasos: 1) Abrí SysCorp Panel  2) Tocá favorito DIMA-PANEL  3) Volvé acá  4) EJECUTAR');
-      dot('ok','Esperando bookmarklet');prog(0,'Usar DIMA-PANEL primero');return;
+      log('inf','Flujo: Paso 1 → Abrí SysCorp Panel → Pegá el código bookmarklet en la URL → volvé acá');
+      dot('ok','Esperando');prog(0,'Ejecutar DIMA-PANEL');return;
     }
     prog(25,'Parseando TSV…');
     const cots=parseTSV(txt);
-    if(!cots.length){log('err','No se reconocieron cotizaciones en el portapapeles');prog(0,'Error parse');return;}
+    if(!cots.length){log('err','No se reconocieron cotizaciones');prog(0,'Error parse');return;}
     log('ok',cots.length+' cotizaciones en portapapeles');
     S.recs=cots;renderCots(cots);
 
-    // Filtrar nuevas (reabiertos siempre pasan)
-    let nuevas=cots.filter(function(c){
-      const id=String(c.Id);
-      if((c.Code||'').includes('Reabierto'))return true;
-      return !S.idx.has(id);
-    });
-    log('inf','Total:'+cots.length+' | Nuevas:'+nuevas.length+' | Ya procesadas:'+(cots.length-nuevas.length));
-    if(!nuevas.length){log('ok','Sin novedades — todo en el índice');prog(100,'Al día');dot('ok','Al día');return;}
+    let nuevas=cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));
+    log('inf','Total:'+cots.length+' | Nuevas:'+nuevas.length+' | Índice:'+(cots.length-nuevas.length));
+    if(!nuevas.length){log('ok','Sin novedades — todo al día');prog(100,'Al día');dot('ok','Al día');return;}
 
     if(nuevas.length>C.MAX_E){
-      S.queue=nuevas.slice(C.MAX_E).map(function(c){return String(c.Id);});
+      S.queue=nuevas.slice(C.MAX_E).map(c=>String(c.Id));
       nuevas=nuevas.slice(0,C.MAX_E);
-      log('wrn','Límite '+C.MAX_E+': procesando '+nuevas.length+', quedan '+S.queue.length+' en cola');
+      log('wrn','Límite '+C.MAX_E+': procesando '+nuevas.length+', quedan '+S.queue.length);
     }
 
     prog(60,'Construyendo TSV ('+nuevas.length+' cotizaciones)…');
     const fecha=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});
-    const rows=nuevas.map(function(c){
+    const rows=nuevas.map(c=>{
       const r=c._row||[];
-      // Si tenemos la fila original del bookmarklet, la usamos (ya tiene todos los campos)
-      if(r.length>=25&&r[1]==='SYSCORP'){
-        // Remover la col Z (metadata) para el Sheet
-        return r.slice(0,25).concat(['']); // 26 cols
-      }
-      // Fallback: construir la fila
+      if(r.length>=25&&r[1]==='SYSCORP')return r.slice(0,25).concat(['']);
       const v=c.Vehicle||{};
       const placa=(c.LicensePlate||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-');
       return [fecha,'SYSCORP',c.Code||String(c.Id),c.strCompany||'',c.SinisterId||'',
-        placa,v.Brand||'',v.Model||'',String(v.Year||''),v.VIN||c.vin||'',
+        placa,v.Brand||'',v.Model||'',String(v.Year||''),v.VIN||'',
         c.StartDate||'',c.EndDate||'',(c.BodyShop&&c.BodyShop.Name)||'',
         '','','','','1','','','','','','','',''];
     });
-
-    const tsv=rows.map(function(r){return r.slice(0,26).map(function(v){return(v==null?'':String(v)).replace(/[\t\r\n]/g,' ');}).join('\t');}).join('\n');
-    nuevas.forEach(function(c){S.idx.add(String(c.Id));});
+    const tsv=rows.map(r=>r.slice(0,26).map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');
+    nuevas.forEach(c=>S.idx.add(String(c.Id)));
     S.ext+=nuevas.length;
     prog(85,'Copiando TSV…');
     const ok=await copiarTexto(tsv);
     guardarIdx();
     $('tsv-tit').textContent=ok?'✓ TSV COPIADO':'TSV GENERADO';
-    $('tsv-desc').textContent=ok
-      ?(nuevas.length+' cotizaciones, '+rows.length+' filas. Abrí Sheet → primera celda vacía → Ctrl+V o toque largo → Pegar.')
-      :(rows.length+' filas. Clipboard bloqueado — copiá manualmente desde el área de texto.');
+    $('tsv-desc').textContent=nuevas.length+' cotizaciones, '+rows.length+' filas. '+(ok?'Abrí Google Sheets → primera celda vacía → mantené presionado → Pegar.':'Clipboard bloqueado — copiá manualmente.')+(S.queue.length?' ⚠ Quedan '+S.queue.length+' → ejecutá de nuevo.':'');
     $('ov-tsv').classList.add('open');
-    prog(100,rows.length+' filas listas');dot('ok',S.ext+' extraídas');ui();
-    if(S.queue.length)log('wrn','⚠ Quedan '+S.queue.length+' en cola → ejecutá de nuevo');
-  }catch(e){
-    S.err++;log('err','Extracción: '+e.message);dot('err','Error');prog(0,'Error');ui();
-  }finally{
-    S.busy=false;$('btn-run').disabled=false;
-  }
+    prog(100,rows.length+' filas listas');dot('ok',S.ext+' extraídas');
+    log('ok','━━ FIN: '+nuevas.length+' cots, '+rows.length+' filas ━━');
+    if(S.queue.length)log('wrn','⚠ Quedan '+S.queue.length+' → ejecutá de nuevo');
+  }catch(e){S.err++;log('err','Extracción: '+e.message);dot('err','Error');prog(0,'Error');}
+  finally{S.busy=false;$('fab').disabled=false;ui();}
 }
 
-/* ══ SUBIR ══ */
-async function doSubir(){
-  S.busy=true;dot('busy','Subiendo…');$('btn-run').disabled=true;
-  log('inf','── SUBIDA SYSCORP ──');prog(5,'Leyendo Sheet SUBIR…');
+/* ▲▲ AUTO-DETALLE ▲▲ */
+async function doAutoDetalle(){
+  S.busy=true;dot('busy','Auto-Detalle…');$('fab').disabled=true;
+  log('inf','━━ AUTO-DETALLE SYSCORP ━━');prog(5,'Leyendo portapapeles…');
   try{
-    let filas;
-    try{filas=await leerSheetSubir();}
-    catch(e){
-      log('err','Sheet SUBIR: '+e.message);
-      log('inf','TIP: abrí la Sheet SUBIR en otra pestaña y asegurate de estar logueado en Google');
-      dot('err','Error Sheet');prog(0,'Error');return;
-    }
-    if(!filas.length){log('wrn','Sheet SUBIR vacío — completá PRECIO/DIAS/DESC/DISP');prog(0,'Sin datos');dot('ok','Sin datos');return;}
-
-    // Obtener CompanyId de los recientes escaneados
-    function getCid(sol){
-      const m=S.recs.find(function(c){return (c.Code||String(c.Id))===sol||String(c.Id)===sol;});
-      return m?parseInt(m.CompanyId)||0:0;
-    }
-
-    let aSubir=filas;
-    if(filas.length>C.MAX_S){log('wrn','Límite '+C.MAX_S+': procesando '+C.MAX_S+' de '+filas.length);aSubir=filas.slice(0,C.MAX_S);}
-    log('inf','Subiendo '+aSubir.length+' precios a SysCorp…');
-    log('inf','Se abrirán ventanas emergentes — habilitá popups para syscorpla.com');
-
-    for(let i=0;i<aSubir.length;i++){
-      const row=aSubir[i];
-      const cid=getCid(row.sol);
-      prog(10+Math.round(i/aSubir.length*85),'Subiendo '+(i+1)+'/'+aSubir.length+': '+row.sol+'/'+row.cod);
-      if(!cid){log('wrn',row.sol+': CompanyId desconocido — ejecutá EXTRAER primero para cargar recientes');S.err++;continue;}
+    if(!navigator.clipboard)throw new Error('Clipboard API no disponible');
+    const txt=await navigator.clipboard.readText();
+    if(!txt.trim()||!txt.includes('SYSCORP')){log('wrn','Ejecutá DIMA-PANEL primero');dot('ok','Esperando');prog(0,'—');return;}
+    const cots=parseTSV(txt);
+    if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}
+    S.recs=cots;renderCots(cots);
+    let nuevas=cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));
+    log('inf','Total:'+cots.length+' Nuevas:'+nuevas.length);
+    if(!nuevas.length){log('ok','Al día — todo procesado');prog(100,'Al día');dot('ok','Al día');return;}
+    if(nuevas.length>C.MAX_E){S.queue=nuevas.slice(C.MAX_E).map(c=>String(c.Id));nuevas=nuevas.slice(0,C.MAX_E);log('wrn','Límite '+C.MAX_E+': '+nuevas.length+' ahora, '+S.queue.length+' en cola');}
+    log('inf','Procesando '+nuevas.length+' (habilitá popups syscorpla.com)');
+    const fch=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});
+    const all=[];
+    for(let i=0;i<nuevas.length;i++){
+      const c=nuevas[i];
+      prog(10+Math.round(i/nuevas.length*80),'('+(i+1)+'/'+nuevas.length+') '+c.Code);
+      log('inf','↓ '+c.Code+' '+c.Vehicle.Brand+' '+c.Vehicle.Model);
       try{
-        await subirEnVentana(row,cid);
-        log('ok','✓ '+row.sol+'/'+row.cod+' → ₡'+row.precio+' | '+row.dias+'d | '+row.desc+'% | '+row.disp);
-        S.sub++;
-        await new Promise(function(r){setTimeout(r,600);});
+        const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);
+        all.push(...f);S.idx.add(String(c.Id));S.ext++;
+        log('ok','✓ '+c.Code+' → '+f.length+' partes');
+        await new Promise(r=>setTimeout(r,600));
       }catch(e){
-        if(e.message.includes('skip')||e.message.includes('nalizada')||e.message.includes('pirado')){
-          log('wrn','⏭ Skip '+row.sol+': '+e.message);
-        }else{
-          S.err++;log('err','✗ '+row.sol+'/'+row.cod+': '+e.message+' → reintentando');
-          try{
-            await new Promise(function(r){setTimeout(r,1500);});
-            await subirEnVentana(row,cid);
-            log('ok','✓ Reintento OK: '+row.sol);S.sub++;
-          }catch(e2){log('err','✗ Fallo: '+row.sol+' → LOG');}
-        }
+        S.err++;log('err','✗ '+c.Code+': '+e.message+' reintentando');
+        try{await new Promise(r=>setTimeout(r,2000));const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...f);S.idx.add(String(c.Id));S.ext++;log('ok','✓ OK '+c.Code);}
+        catch(e2){log('err','✗ Falló: '+c.Code);}
       }
     }
-    prog(100,S.sub+' subidas');dot('ok',S.sub+' subidas');
-    log('ok','── FIN SUBIDA: '+S.sub+' OK, '+S.err+' errores ──');
-    if(filas.length>C.MAX_S)log('wrn','⚠ Quedan '+(filas.length-C.MAX_S)+' → ejecutá Subir de nuevo');
-  }catch(e){S.err++;log('err','Error subida: '+e.message);dot('err','Error');}
-  finally{S.busy=false;$('btn-run').disabled=false;ui();}
+    if(!all.length){log('err','Sin filas');prog(0,'Error');return;}
+    const tsv=all.map(r=>r.map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');
+    const ok=await copiarTexto(tsv);guardarIdx();
+    $('tsv-tit').textContent=ok?'✓ TSV COPIADO':'TSV GENERADO';
+    $('tsv-desc').textContent=nuevas.length+' cots, '+all.length+' partes. '+(ok?'Abrí Sheets → primera celda vacía → mantené presionado → Pegar.':'Clipboard bloqueado.')+(S.queue.length?' ⚠ Quedan '+S.queue.length+' → ejecutá de nuevo.':'');
+    $('ov-tsv').classList.add('open');
+    prog(100,all.length+' partes');dot('ok',S.ext+' extraídas');
+    log('ok','━━ FIN AUTO: '+nuevas.length+' cots '+all.length+' partes ━━');
+  }catch(e){S.err++;log('err',e.message);dot('err','Error');prog(0,'Error');}
+  finally{S.busy=false;$('fab').disabled=false;ui();}
 }
 
-/* ══ MAIN ══ */
-
-async function extraerDetalleCot(id,cid,fecha){const win=window.open(C.BASE+C.APPLY+'?q='+encodeURIComponent(id)+'&c='+encodeURIComponent(cid),'_det_'+id,'width=1024,height=700');if(!win)throw new Error('Popup bloqueado');await new Promise((res,rej)=>{const t=setTimeout(()=>{win.close();rej(new Error('Timeout'));},25000);const iv=setInterval(()=>{try{if(win.closed){clearInterval(iv);clearTimeout(t);rej(new Error('Cerrada'));return;}if(win.document.querySelectorAll('tr[data-index]').length>0&&win.document.readyState==='complete'){clearInterval(iv);clearTimeout(t);res();}}catch(e){}},400);});function gl(t){const e=[...win.document.querySelectorAll('label')].find(e=>e.innerText.trim().replace(/:| /g,'').toLowerCase()===t.toLowerCase());return e&&e.nextElementSibling?e.nextElementSibling.innerText.trim():'';}const sol=gl('Solicitud')||String(id),comp=gl('Compañia')||gl('Compania'),caso=gl('Siniestro')||gl('Caso'),placa=(gl('Placa')||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-').trim(),marca=gl('Marca'),modelo=gl('Modelo'),anio=gl('Año')||gl('Ano'),vin=gl('VIN'),taller=gl('Taller');const qM={'':'NA','1':'ORIGINAL','2':'GENERICO','3':'USADO'},tM={'1':'Suministro','2':'Repuesto'};const f=[...win.document.querySelectorAll('tr[data-index]')].map(tr=>{const tds=[...tr.querySelectorAll('td')];const slT=tr.querySelector('#slType'),slQ=tr.querySelector('#slTypesQuotation'),dtP=tr.querySelector('#dtPrice'),dtD=tr.querySelector('#dtDays'),dtPc=tr.querySelector('#dtPercent'),cb=tr.querySelector('input[type=checkbox]');return[fecha,'SYSCORP',sol,comp,caso,placa,marca,modelo,anio,vin||'','','',taller,tds[0]?tds[0].innerText.trim():'',tds[1]?tds[1].innerText.trim():'',slT?qM[slT.value]||'':'',slQ?tM[slQ.value]||'':'','1',dtP?dtP.value:'',dtD?dtD.value:'',dtPc?dtPc.value:'',cb?(cb.checked?'SI':'NO'):'','','','',String(id)+'|'+String(cid)];});win.close();return f;}
-async function doAutoDetalle(){S.busy=true;dot('busy','Auto…');$('btn-run').disabled=true;log('inf','━━ AUTO-DETALLE ━━');prog(5,'Leyendo…');try{if(!navigator.clipboard)throw new Error('Sin Clipboard API');const txt=await navigator.clipboard.readText();if(!txt.trim()||!txt.includes('SYSCORP')){log('wrn','Ejecutá DIMA-PANEL primero');dot('ok','Esperando');prog(0,'—');return;}const cots=parseTSV(txt);if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}S.recs=cots;renderCots(cots);let nv=cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));log('inf','Total:'+cots.length+' Nuevas:'+nv.length);if(!nv.length){log('ok','Al día — todo procesado');prog(100,'Al día');dot('ok','Al día');return;}if(nv.length>C.MAX_E){S.queue=nv.slice(C.MAX_E).map(c=>String(c.Id));nv=nv.slice(0,C.MAX_E);log('wrn','Límite '+C.MAX_E+': '+nv.length+' ahora, '+S.queue.length+' en cola');}log('inf','Procesando '+nv.length+' cotizaciones (habilitá popups syscorpla.com)');const fch=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});const all=[];for(let i=0;i<nv.length;i++){const c=nv[i];prog(10+Math.round(i/nv.length*80),'('+(i+1)+'/'+nv.length+') '+c.Code);log('inf','↓ '+(i+1)+'/'+nv.length+' '+c.Code+' '+c.Vehicle.Brand+' '+c.Vehicle.Model);try{const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...f);S.idx.add(String(c.Id));S.ext++;log('ok','✓ '+c.Code+' → '+f.length+' partes');await new Promise(r=>setTimeout(r,600));}catch(e){S.err++;log('err','✗ '+c.Code+': '+e.message+' reintentando');try{await new Promise(r=>setTimeout(r,2000));const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...f);S.idx.add(String(c.Id));S.ext++;log('ok','✓ OK '+c.Code);}catch(e2){log('err','✗ Falló: '+c.Code);}}}if(!all.length){log('err','Sin filas');prog(0,'Error');return;}const tsv=all.map(r=>r.map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');const ok=await copiarTexto(tsv);guardarIdx();$('tsv-tit').textContent=ok?'✓ TSV COPIADO':'TSV GENERADO';$('tsv-desc').textContent=nv.length+' cots, '+all.length+' partes. '+(ok?'Abrí Sheet → primera celda vacía → Ctrl+V → Pegar.':'Copiá manualmente.')+(S.queue.length?' ⚠ Quedan '+S.queue.length+' → ejecutá de nuevo.':'');$('ov-tsv').classList.add('open');prog(100,all.length+' partes');dot('ok',S.ext+' extraídas');log('ok','━━ FIN: '+nv.length+' cots '+all.length+' partes '+S.err+' err ━━');if(S.queue.length)log('wrn','⚠ Quedan '+S.queue.length+' → ejecutá de nuevo');}catch(e){S.err++;log('err',e.message);dot('err','Error');prog(0,'Error');}finally{S.busy=false;$('btn-run').disabled=false;ui();}}
-
-/* ▲▲ IA-PILOTO: extracción autónoma con análisis de Claude ▲▲ */
-async function claudeIA(prompt, systemPrompt){
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      system: systemPrompt||'Sos el asistente de cotizaciones de DIMA Parts. Respondés solo en JSON sin backticks.',
-      messages:[{role:'user',content:prompt}]
-    })
-  });
-  const d = await resp.json();
-  const txt = d.content?.map(c=>c.text||'').join('') || '';
-  try{ return JSON.parse(txt.replace(/```json|```/g,'').trim()); }
-  catch(e){ return {raw:txt}; }
-}
-
-async function iaClasificarPartes(filas, vehiculo){
-  // Enviar lote de partes a Claude para clasificación inteligente
-  const partes = filas.slice(0,40).map((r,i)=>({i, cod:r[13], desc:r[14]}));
-  const prompt = 'Vehículo: '+vehiculo+'\nPartes:\n'+JSON.stringify(partes)+'\n\nPara cada parte sugerí la calidad óptima (ORIGINAL/GENERICO/USADO) y una observación corta (máx 30 chars). Respondé SOLO JSON array: [{"i":0,"calidad":"ORIGINAL","obs":""},...]';
-  try{
-    const res = await claudeIA(prompt, 'Sos experto en repuestos automotrices. Para piezas estructurales, de seguridad o electrónicas recomendás ORIGINAL. Para carrocería exterior podés sugerir GENERICO. Para piezas de bajo impacto podés sugerir USADO. Respondés SOLO JSON array.');
-    return Array.isArray(res) ? res : [];
-  }catch(e){ return []; }
-}
-
-async function iaPriorizar(cots){
-  const resumen = cots.slice(0,15).map(c=>({id:c.Id,code:c.Code,marca:c.Vehicle.Brand,modelo:c.Vehicle.Model,anio:c.Vehicle.Year,cia:c.strCompany}));
-  const prompt = 'Cotizaciones pendientes:\n'+JSON.stringify(resumen)+'\n\nOrdenálas por prioridad de atención (vehículos más nuevos y de marcas con disponibilidad de repuestos primero). Respondé SOLO JSON array de IDs ordenados: ["id1","id2",...]';
-  try{
-    const res = await claudeIA(prompt, 'Sos experto en gestión de cotizaciones de repuestos. Priorizás vehículos nuevos (más fácil conseguir repuestos), luego marcas comunes en CR (Toyota, Hyundai, Kia, Nissan, Honda). Respondés SOLO JSON array.');
-    return Array.isArray(res) ? res.map(String) : [];
-  }catch(e){ return []; }
-}
-
+/* ▲▲ IA-PILOTO ▲▲ */
 async function doIAPiloto(){
-  S.busy=true; dot('busy','IA Piloto…'); $('btn-run').disabled=true;
+  S.busy=true;dot('busy','IA Piloto…');$('fab').disabled=true;
   log('inf','━━ 🤖 IA-PILOTO DIMA ━━');
-  log('inf','Modo autónomo: extrae todo + clasifica con IA hasta vaciar la cola');
+  log('inf','Modo autónomo: extrae todo + clasifica con Claude AI');
   prog(3,'Leyendo portapapeles…');
-
   try{
-    if(!navigator.clipboard) throw new Error('Clipboard API no disponible');
-    const txt = await navigator.clipboard.readText();
-    if(!txt.trim()||!txt.includes('SYSCORP')){
-      log('wrn','Ejecutá DIMA-PANEL en SysCorp primero');
-      dot('ok','Esperando'); prog(0,'—'); return;
-    }
-
-    const cots = parseTSV(txt);
+    if(!navigator.clipboard)throw new Error('Clipboard API no disponible');
+    const txt=await navigator.clipboard.readText();
+    if(!txt.trim()||!txt.includes('SYSCORP')){log('wrn','Ejecutá DIMA-PANEL primero');dot('ok','Esperando');prog(0,'—');return;}
+    const cots=parseTSV(txt);
     if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}
-    S.recs=cots; renderCots(cots);
-
-    let nuevas = cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));
+    S.recs=cots;renderCots(cots);
+    let nuevas=cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));
     log('inf','Panel: '+cots.length+' | Nuevas: '+nuevas.length);
-    if(!nuevas.length){log('ok','✓ Todo al día — índice completo');prog(100,'Al día');dot('ok','Al día');return;}
+    if(!nuevas.length){log('ok','✓ Todo al día');prog(100,'Al día');dot('ok','Al día');return;}
 
-    // ── PASO 1: IA prioriza las cotizaciones ──
-    log('inf','🧠 IA analizando prioridades…');
-    prog(8,'IA priorizando cotizaciones…');
-    const ordenIA = await iaPriorizar(nuevas);
-    if(ordenIA.length > 0){
-      const ordenMap = {};
-      ordenIA.forEach((id,i)=>ordenMap[String(id)]=i);
-      nuevas.sort((a,b)=>{
-        const ia = ordenMap[String(a.Id)]??999;
-        const ib = ordenMap[String(b.Id)]??999;
-        return ia-ib;
-      });
-      log('ok','🧠 IA priorizó: '+nuevas.slice(0,3).map(c=>c.Vehicle.Brand+' '+c.Vehicle.Model).join(', ')+(nuevas.length>3?'…':''));
-    } else {
-      log('wrn','IA no disponible — orden original del panel');
-    }
+    // IA prioriza
+    log('inf','🧠 IA priorizando…');prog(8,'IA analizando…');
+    const ordenIA=await iaPriorizar(nuevas);
+    if(ordenIA.length>0){
+      const om={};ordenIA.forEach((id,i)=>om[String(id)]=i);
+      nuevas.sort((a,b)=>(om[String(a.Id)]??999)-(om[String(b.Id)]??999));
+      log('ok','🧠 Orden IA: '+nuevas.slice(0,3).map(c=>c.Vehicle.Brand+' '+c.Vehicle.Model).join(', ')+(nuevas.length>3?'…':''));
+    }else{log('wrn','IA no disponible — orden original');}
 
-    // ── PASO 2: Loop de extracción hasta vaciar la cola ──
-    const fecha = new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});
-    const todasFilas = [];
-    let ronda = 1;
-    let pendientes = [...nuevas];
+    // Loop completo sin límite de rondas
+    const fch=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});
+    const all=[];
+    let pendientes=[...nuevas];
+    let ronda=1;
 
-    while(pendientes.length > 0){
-      const lote = pendientes.slice(0, C.MAX_E);
-      pendientes = pendientes.slice(C.MAX_E);
-      log('inf','▶ Ronda '+ronda+': procesando '+lote.length+' cotizaciones'+(pendientes.length?' (quedan '+pendientes.length+')':''));
+    while(pendientes.length>0){
+      const lote=pendientes.slice(0,C.MAX_E);
+      pendientes=pendientes.slice(C.MAX_E);
+      log('inf','▶ Ronda '+ronda+': '+lote.length+' cots'+(pendientes.length?' ('+pendientes.length+' después)':''));
 
       for(let i=0;i<lote.length;i++){
         const c=lote[i];
-        const progTotal = Math.round(10+(ronda-1)*20 + i/lote.length*20);
-        prog(Math.min(progTotal,85),'Ronda '+ronda+' ('+( i+1)+'/'+lote.length+'): '+c.Code);
+        const p=Math.min(10+(ronda-1)*15+Math.round(i/lote.length*15),85);
+        prog(p,'R'+ronda+' ('+( i+1)+'/'+lote.length+'): '+c.Code);
         log('inf','↓ '+c.Code+' — '+c.Vehicle.Brand+' '+c.Vehicle.Model+' '+c.Vehicle.Year);
-
         try{
-          let filas = await extraerDetalleCot(c.Id, c.CompanyId, fecha);
-
-          // ── PASO 3: IA clasifica partes de esta cotización ──
-          if(filas.length > 0){
-            log('inf','🧠 IA clasificando '+filas.length+' partes de '+c.Code+'…');
-            const vehiculo = c.Vehicle.Brand+' '+c.Vehicle.Model+' '+c.Vehicle.Year;
-            const sug = await iaClasificarPartes(filas, vehiculo);
-            if(sug.length > 0){
-              // Aplicar sugerencias de IA a las columnas P (calidad) y X (observaciones)
-              sug.forEach(s=>{
-                if(filas[s.i]){
-                  if(s.calidad && filas[s.i][15]==='NA') filas[s.i][15]=s.calidad;
-                  if(s.obs) filas[s.i][22]=s.obs;
-                }
-              });
-              const conSug = sug.filter(s=>s.calidad&&s.calidad!=='NA').length;
-              log('ok','🧠 '+conSug+'/'+filas.length+' partes clasificadas por IA');
+          let filas=await extraerDetalleCot(c.Id,c.CompanyId,fch);
+          if(filas.length>0){
+            log('inf','🧠 IA clasificando '+filas.length+' partes…');
+            const sug=await iaClasificarPartes(filas,c.Vehicle.Brand+' '+c.Vehicle.Model+' '+c.Vehicle.Year);
+            if(sug.length>0){
+              sug.forEach(s=>{if(filas[s.i]){if(s.calidad&&filas[s.i][15]==='NA')filas[s.i][15]=s.calidad;if(s.obs)filas[s.i][22]=s.obs;}});
+              log('ok','🧠 '+sug.filter(s=>s.calidad&&s.calidad!=='NA').length+'/'+filas.length+' partes clasificadas');
             }
           }
-
-          todasFilas.push(...filas);
-          S.idx.add(String(c.Id)); S.ext++;
+          all.push(...filas);S.idx.add(String(c.Id));S.ext++;
           log('ok','✓ '+c.Code+' → '+filas.length+' partes');
           await new Promise(r=>setTimeout(r,800));
-
         }catch(e){
-          S.err++;
-          log('err','✗ '+c.Code+': '+e.message+' → reintentando');
-          try{
-            await new Promise(r=>setTimeout(r,2000));
-            const filas = await extraerDetalleCot(c.Id, c.CompanyId, fecha);
-            todasFilas.push(...filas); S.idx.add(String(c.Id)); S.ext++;
-            log('ok','✓ Reintento OK: '+c.Code);
-          }catch(e2){ log('err','✗ Falló definitivo: '+c.Code); }
+          S.err++;log('err','✗ '+c.Code+': '+e.message+' reintentando');
+          try{await new Promise(r=>setTimeout(r,2000));const filas=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...filas);S.idx.add(String(c.Id));S.ext++;log('ok','✓ Reintento: '+c.Code);}
+          catch(e2){log('err','✗ Falló definitivo: '+c.Code);}
         }
       }
-
       guardarIdx();
-      log('ok','✓ Ronda '+ronda+' completa. Acumuladas: '+todasFilas.length+' partes');
+      log('ok','✓ Ronda '+ronda+' completa. Acumuladas: '+all.length+' partes');
       ronda++;
-
-      // Pausa entre rondas para no sobrecargar
-      if(pendientes.length > 0){
-        log('inf','⏳ Pausa 2s antes de ronda '+ronda+'…');
-        await new Promise(r=>setTimeout(r,2000));
-      }
+      if(pendientes.length>0){log('inf','⏳ Pausa 2s…');await new Promise(r=>setTimeout(r,2000));}
     }
 
-    if(!todasFilas.length){log('err','Sin filas generadas');prog(0,'Error');return;}
+    if(!all.length){log('err','Sin filas');prog(0,'Error');return;}
 
-    // ── PASO 4: IA genera resumen ejecutivo ──
-    prog(90,'🧠 IA generando resumen…');
-    log('inf','🧠 IA generando resumen ejecutivo…');
+    // Resumen IA
+    prog(92,'🧠 IA generando resumen…');
     try{
-      const resumenPrompt = 'Extracción DIMA Parts completada:\n- '+nuevas.length+' cotizaciones procesadas\n- '+todasFilas.length+' partes totales\n- '+S.err+' errores\n- Compañías: '+[...new Set(nuevas.map(c=>c.strCompany))].join(', ')+'\n\nGenerá un resumen ejecutivo en 2 líneas máx para el equipo de cotizaciones. SOLO texto plano, sin JSON.';
-      const resIA = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:150,messages:[{role:'user',content:resumenPrompt}]})});
-      const resD = await resIA.json();
-      const resTexto = resD.content?.[0]?.text||'';
-      if(resTexto) log('ok','📋 '+resTexto.trim().slice(0,120));
-    }catch(e){ log('wrn','Resumen IA no disponible'); }
+      const rp='Extracción DIMA Parts:\n- '+nuevas.length+' cotizaciones\n- '+all.length+' partes\n- '+S.err+' errores\n- Compañías: '+[...new Set(nuevas.map(c=>c.strCompany))].join(', ')+'\n\nResumen ejecutivo en 2 líneas para el equipo. SOLO texto.';
+      const rd=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:C.CLAUDE_MODEL,max_tokens:150,messages:[{role:'user',content:rp}]})});
+      const rj=await rd.json();
+      const rt=rj.content?.[0]?.text||'';
+      if(rt)log('ia','📋 '+rt.trim().slice(0,150));
+    }catch(e){log('wrn','Resumen IA no disponible');}
 
-    // ── PASO 5: copiar TSV y abrir modal ──
-    prog(95,'Copiando TSV…');
-    const tsv = todasFilas.map(r=>r.map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');
-    const ok = await copiarTexto(tsv);
-    guardarIdx();
-
-    $('tsv-tit').textContent = ok ? '🤖 IA-PILOTO: TSV LISTO' : 'TSV GENERADO';
-    $('tsv-desc').textContent = nuevas.length+' cotizaciones · '+todasFilas.length+' partes · '+ronda-1+' rondas · '+S.err+' errores. '+(ok?'Abrí Sheet → primera celda vacía → Ctrl+V → Pegar.':'Clipboard bloqueado.');
+    const tsv=all.map(r=>r.map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');
+    const ok=await copiarTexto(tsv);guardarIdx();
+    $('tsv-tit').textContent='🤖 IA-PILOTO: TSV LISTO';
+    $('tsv-desc').textContent=nuevas.length+' cots · '+all.length+' partes · '+(ronda-1)+' rondas · '+S.err+' err. '+(ok?'Abrí Sheets → primera celda vacía → mantené presionado → Pegar.':'Clipboard bloqueado.')+(S.queue.length?' ⚠ Quedan '+S.queue.length+' → ejecutá de nuevo.':'');
     $('ov-tsv').classList.add('open');
-    prog(100, todasFilas.length+' partes · '+ronda-1+' rondas');
-    dot('ok', S.ext+' extraídas');
-    log('ok','━━ 🤖 FIN IA-PILOTO: '+nuevas.length+' cots · '+todasFilas.length+' partes · '+S.err+' err · '+(ronda-1)+' rondas ━━');
-
-  }catch(e){
-    S.err++; log('err','IA-Piloto: '+e.message); dot('err','Error'); prog(0,'Error');
-  }finally{
-    S.busy=false; $('btn-run').disabled=false; ui();
-  }
+    prog(100,all.length+' partes · '+(ronda-1)+' rondas');dot('ok',S.ext+' extraídas');
+    log('ok','━━ 🤖 FIN IA: '+nuevas.length+' cots · '+all.length+' partes · '+(ronda-1)+' rondas ━━');
+  }catch(e){S.err++;log('err',e.message);dot('err','Error');prog(0,'Error');}
+  finally{S.busy=false;$('fab').disabled=false;ui();}
 }
 
+/* ▲▲ DOSUBIR ▲▲ */
+async function doSubir(){
+  S.busy=true;dot('busy','Subiendo…');$('fab').disabled=true;
+  log('inf','━━ SUBIDA SYSCORP ━━');prog(5,'Leyendo Sheet SUBIR…');
+  try{
+    let filas;
+    try{filas=await leerSheetSubir();}
+    catch(e){log('err','Sheet SUBIR: '+e.message);log('inf','TIP: abrí la Sheet en otra pestaña y asegurate de estar logueado en Google');dot('err','Error Sheet');prog(0,'Error');return;}
+    if(!filas.length){log('wrn','Sheet SUBIR vacío — completá PRECIO/DIAS/DESC/DISP');prog(0,'Sin datos');dot('ok','Sin datos');return;}
+    function getCid(sol){const m=S.recs.find(c=>(c.Code||String(c.Id))===sol||String(c.Id)===sol);return m?parseInt(m.CompanyId)||0:0;}
+    let aSub=filas;
+    if(filas.length>C.MAX_S){log('wrn','Límite '+C.MAX_S+': procesando '+C.MAX_S+' de '+filas.length);aSub=filas.slice(0,C.MAX_S);}
+    log('inf','Subiendo '+aSub.length+' precios (habilitá popups syscorpla.com)');
+    for(let i=0;i<aSub.length;i++){
+      const row=aSub[i];const cid=getCid(row.sol);
+      prog(10+Math.round(i/aSub.length*85),'Subiendo '+(i+1)+'/'+aSub.length+': '+row.sol+'/'+row.cod);
+      if(!cid){log('wrn',row.sol+': CompanyId desconocido → ejecutá EXTRAER primero');S.err++;continue;}
+      try{
+        await subirEnVentana(row,cid);
+        log('ok','✓ '+row.sol+'/'+row.cod+' → ₡'+row.precio+' | '+row.dias+'d | '+row.desc+'%');
+        S.sub++;await new Promise(r=>setTimeout(r,600));
+      }catch(e){
+        if(e.message.includes('skip')||e.message.includes('nalizada')){log('wrn','⏩ Skip '+row.sol+': '+e.message);}
+        else{S.err++;log('err','✗ '+row.sol+'/'+row.cod+': '+e.message+' → reintentando');
+          try{await new Promise(r=>setTimeout(r,1500));await subirEnVentana(row,cid);log('ok','✓ Reintento: '+row.sol);S.sub++;}
+          catch(e2){log('err','✗ Falló: '+row.sol);}}
+      }
+    }
+    prog(100,S.sub+' subidas');dot('ok',S.sub+' subidas');
+    log('ok','━━ FIN SUBIDA: '+S.sub+' OK, '+S.err+' errores ━━');
+    if(filas.length>C.MAX_S)log('wrn','⚠ Quedan '+(filas.length-C.MAX_S)+' → ejecutá Subir de nuevo');
+  }catch(e){S.err++;log('err','Error subida: '+e.message);dot('err','Error');}
+  finally{S.busy=false;$('fab').disabled=false;ui();}
+}
+
+function doStatus(){
+  log('inf','━━ ESTADO ━━');
+  log('inf','Op:'+S.op.toUpperCase()+' Ext:'+S.ext+' Sub:'+S.sub+' Err:'+S.err);
+  log('inf','Índice:'+S.idx.size+' Cola:'+S.queue.length+' Recs:'+S.recs.length);
+}
+
+/* ▲▲ MAIN ▲▲ */
 async function doRun(){
   if(S.busy){log('wrn','Operación en curso');return;}
   if(S.op==='ext')await doExtraer();
-  else if(S.op==='auto')await doAutoDetalle();
+  else if(S.op==='ia')await doIAPiloto();
   else await doSubir();
 }
 
-/* ══ INIT ══ */
-cargarIdx();setOp('ext');
-log('ok','SYSCORP Assistant · DIMA Parts');
-log('inf','Flujo extraer: BOOKMARKLETS → instalar DIMA-PANEL → ejecutar en SysCorp → SCAN PANEL → EJECUTAR');
-log('inf','Flujo subir: completar Sheet SUBIR → modo SUBIR → EJECUTAR');
+// Botón ≡ menú acciones en topbar
+document.querySelector('.tb-right').insertAdjacentHTML('beforeend',
+  `<button onclick="document.getElementById('ov-menu').classList.add('open')" style="background:var(--s2);border:1px solid var(--br2);border-radius:6px;padding:7px 10px;color:var(--mu);font-size:16px;cursor:pointer;touch-action:manipulation">≡</button>`
+);
+
+/* ▲▲ INIT ▲▲ */
+cargarIdx();
+setOp('ext');
+log('ok','SYSCORP Assistant · DIMA Parts — Android ready');
+log('inf','Flujo: Abrí SysCorp → ejecutá DIMA-PANEL → volvé → EJECUTAR');
 dot('ok','Listo');
 </script>
 </body>
