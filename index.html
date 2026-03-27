@@ -179,6 +179,27 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:15px
   </div>
 </div>
 
+
+<!-- PASTE TSV MANUAL — Android clipboard workaround -->
+<div class="card" id="card-paste">
+  <div class="chdr">Paso 2 — Pegá los datos <span class="badge ba" id="paste-badge">VACÍO</span></div>
+  <div style="padding:12px">
+    <textarea id="paste-area"
+      placeholder="Tocá aquí → mantené presionado → Pegar (después de ejecutar DIMA-PANEL en SysCorp)"
+      style="width:100%;height:90px;background:var(--s2);border:1px solid var(--br2);border-radius:var(--rm);
+             color:var(--tx);font-family:var(--mono);font-size:11px;padding:10px;resize:none;
+             -webkit-user-select:text;user-select:text;touch-action:manipulation;
+             line-height:1.4;outline:none"
+      oninput="onPasteInput(this)"
+      onpaste="setTimeout(()=>onPasteInput(this),50)"
+    ></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn gr" style="flex:1;min-height:44px;font-size:12px" onclick="usarPegado()">✓ USAR DATOS</button>
+      <button class="btn" style="min-height:44px;padding:0 14px;font-size:12px" onclick="limpiarPegado()">✕</button>
+    </div>
+  </div>
+</div>
+
 <!-- RECIENTES -->
 <div class="card">
   <div class="chdr">Recientes <span class="badge" id="recbadge" style="background:var(--s3);color:var(--mu)">0</span></div>
@@ -266,6 +287,47 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:15px
 </div>
 
 <script>
+
+/* ▲▲ PASTE HELPERS — Android clipboard workaround ▲▲ */
+function onPasteInput(el){
+  const v=el.value.trim();
+  const badge=$('paste-badge');
+  if(!badge)return;
+  if(v.includes('SYSCORP')){
+    const lines=v.split('\n').filter(l=>l.includes('SYSCORP')).length;
+    badge.textContent=lines+' COTS';
+    badge.className='badge bg';
+    el.style.borderColor='rgba(0,214,143,.5)';
+    log('ok','✓ Datos pegados: '+lines+' cotizaciones detectadas');
+  }else if(v.length>0){
+    badge.textContent='INVÁLIDO';
+    badge.className='badge br_';
+    el.style.borderColor='rgba(255,77,106,.5)';
+  }else{
+    badge.textContent='VACÍO';
+    badge.className='badge ba';
+    el.style.borderColor='';
+  }
+}
+function usarPegado(){
+  const txt=($('paste-area')||{}).value||'';
+  if(!txt.includes('SYSCORP')){log('wrn','No hay datos válidos pegados');return;}
+  const cots=parseTSV(txt);
+  if(!cots.length){log('err','No se reconocieron cotizaciones en el texto pegado');return;}
+  S.recs=cots;renderCots(cots);
+  log('ok','✓ '+cots.length+' cotizaciones cargadas desde pegado manual');
+  log('inf','Ahora tocá EJECUTAR para procesar');
+  dot('ok',cots.length+' listas');
+}
+function limpiarPegado(){
+  const pa=$('paste-area');if(!pa)return;
+  pa.value='';pa.style.borderColor='';
+  const badge=$('paste-badge');
+  if(badge){badge.textContent='VACÍO';badge.className='badge ba';}
+  S.recs=[];renderCots([]);
+  log('inf','Campo limpiado');
+}
+
 /* ▲▲ CONFIG ▲▲ */
 const C={
   BASE:'https://syscorpla.com',
@@ -314,7 +376,7 @@ const FLUJOS = {
   ext: [
     {n:1, title:'Abrí SysCorp Panel', desc:'Tocá el botón de abajo para abrir SysCorp en otra pestaña.', action:'btn', btnText:'Abrir SysCorp Panel', btnFn:'openSysCorpPanel()', color:'gr'},
     {n:2, title:'Ejecutá DIMA-Panel en SysCorp', desc:'En SysCorp: abrí el Panel de cotizaciones → tocá el ícono de compartir (⋮) → "Ejecutar bookmarklet" o pegá el código en la barra de URL.', desc2:'<b>Alternativa:</b> En la barra de URL escribí <code>javascript:</code> y pegá el código del bookmarklet DIMA-PANEL.', color:'am'},
-    {n:3, title:'Copiá el TSV al portapapeles', desc:'Cuando aparezca el toast verde en SysCorp, los datos están copiados. Volvé a esta pestaña.', color:'am'},
+    {n:3, title:'Volvé a esta app y ejecutá', desc:'Cuando aparezca el toast verde en SysCorp, los datos están listos. Volvé acá → tocá EJECUTAR. <b>Si el portapapeles falla, aparece un cuadro para pegar manualmente.</b>', color:'am'},
     {n:4, title:'Tocá EJECUTAR', desc:'La app lee el portapapeles, extrae las cotizaciones nuevas y las agrega al Sheet.', action:'fab', color:'gr'},
   ],
   ia: [
@@ -620,15 +682,42 @@ async function subirEnVentana(row,companyId){
 
 /* ▲▲ DOEXTRAER ▲▲ */
 async function doExtraer(){
+  // ANDROID FIX: intentar clipboard, si falla usar textarea
+  S.busy=true;dot('busy','Extrayendo…');$('fab').disabled=true;
+  log('inf','━━ EXTRACCIÓN SYSCORP ━━');prog(5,'Leyendo datos…');
+  try{
+    // Primero intentar clipboard
+    let txt='';
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        txt = await Promise.race([
+          navigator.clipboard.readText(),
+          new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),1500))
+        ]);
+      }
+    }catch(e){
+      // Clipboard bloqueado — usar textarea
+      log('wrn','Clipboard bloqueado — usando campo de pegado');
+      txt = ($('paste-area')||{}).value||'';
+    }
+    if(!txt.trim()||!txt.includes('SYSCORP')){
+      // Mostrar instrucción de pegado manual
+      log('wrn','Sin datos — pegá el TSV en el campo de texto de arriba');
+      log('inf','Flujo: SysCorp → DIMA-PANEL → volvé → pegá en el campo → EJECUTAR');
+      dot('ok','Pegá los datos arriba'); prog(0,'—');
+      S.busy=false;$('fab').disabled=false;
+      // Hacer scroll al campo de paste
+      const pa=$('paste-area');if(pa){pa.scrollIntoView({behavior:'smooth'});pa.focus();}
+      return;
+    }
   S.busy=true;dot('busy','Extrayendo…');$('fab').disabled=true;
   log('inf','━━ EXTRACCIÓN SYSCORP ━━');prog(5,'Leyendo portapapeles…');
   try{
-    if(!navigator.clipboard)throw new Error('Clipboard API no disponible');
-    const txt=await navigator.clipboard.readText();
-    if(!txt.trim()||!txt.includes('SYSCORP')){
-      log('wrn','Portapapeles vacío — ejecutá DIMA-PANEL en SysCorp primero');
-      log('inf','Flujo: Paso 1 → Abrí SysCorp Panel → Pegá el código bookmarklet en la URL → volvé acá');
-      dot('ok','Esperando');prog(0,'Ejecutar DIMA-PANEL');return;
+    let txt;
+    try{ txt = await leerTSV(); }catch(e){ if(e.message==='CLIPBOARD_MODAL'){dot('ok','Pegá los datos');prog(0,'Esperando pegado');S.busy=false;$('fab').disabled=false;return;} throw e; }
+    if(!txt||!txt.trim()||!txt.includes('SYSCORP')){
+      document.getElementById('ov-pegar').classList.add('open');
+      dot('ok','Pegá los datos');prog(0,'Esperando pegado');S.busy=false;$('fab').disabled=false;return;
     }
     prog(25,'Parseando TSV…');
     const cots=parseTSV(txt);
@@ -679,9 +768,9 @@ async function doAutoDetalle(){
   S.busy=true;dot('busy','Auto-Detalle…');$('fab').disabled=true;
   log('inf','━━ AUTO-DETALLE SYSCORP ━━');prog(5,'Leyendo portapapeles…');
   try{
-    if(!navigator.clipboard)throw new Error('Clipboard API no disponible');
-    const txt=await navigator.clipboard.readText();
-    if(!txt.trim()||!txt.includes('SYSCORP')){log('wrn','Ejecutá DIMA-PANEL primero');dot('ok','Esperando');prog(0,'—');return;}
+    let txt;
+    try{ txt = await leerTSV(); }catch(e){ if(e.message==='CLIPBOARD_MODAL'){dot('ok','Pegá los datos');prog(0,'Esperando');S.busy=false;$('fab').disabled=false;return;} throw e; }
+    if(!txt||!txt.trim()||!txt.includes('SYSCORP')){document.getElementById('ov-pegar').classList.add('open');dot('ok','Esperando');prog(0,'—');S.busy=false;$('fab').disabled=false;return;}
     const cots=parseTSV(txt);
     if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}
     S.recs=cots;renderCots(cots);
@@ -726,9 +815,9 @@ async function doIAPiloto(){
   log('inf','Modo autónomo: extrae todo + clasifica con Claude AI');
   prog(3,'Leyendo portapapeles…');
   try{
-    if(!navigator.clipboard)throw new Error('Clipboard API no disponible');
-    const txt=await navigator.clipboard.readText();
-    if(!txt.trim()||!txt.includes('SYSCORP')){log('wrn','Ejecutá DIMA-PANEL primero');dot('ok','Esperando');prog(0,'—');return;}
+    let txt;
+    try{ txt = await leerTSV(); }catch(e){ if(e.message==='CLIPBOARD_MODAL'){dot('ok','Pegá los datos');prog(0,'Esperando');S.busy=false;$('fab').disabled=false;return;} throw e; }
+    if(!txt||!txt.trim()||!txt.includes('SYSCORP')){document.getElementById('ov-pegar').classList.add('open');dot('ok','Esperando');prog(0,'—');S.busy=false;$('fab').disabled=false;return;}
     const cots=parseTSV(txt);
     if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}
     S.recs=cots;renderCots(cots);
@@ -850,6 +939,42 @@ function doStatus(){
   log('inf','Índice:'+S.idx.size+' Cola:'+S.queue.length+' Recs:'+S.recs.length);
 }
 
+
+function procesarTSVPegado(){
+  const ta = $('ta-pegar');
+  const txt = ta ? ta.value.trim() : '';
+  if(!txt){log('wrn','El cuadro está vacío — pegá los datos primero');return;}
+  if(!txt.includes('SYSCORP')){log('err','Los datos no parecen de SysCorp — asegurate de ejecutar DIMA-PANEL primero');return;}
+  document.getElementById('ov-pegar').classList.remove('open');
+  ta.value = '';
+  window.__tsvPendiente = txt;
+  log('ok','Datos pegados: '+txt.split('\n').length+' líneas — procesando…');
+  doRun();
+}
+
+
+async function leerTSV(){
+  // Opción A: ya tenemos TSV pegado manualmente
+  if(window.__tsvPendiente){
+    const txt = window.__tsvPendiente;
+    window.__tsvPendiente = null;
+    return txt;
+  }
+  // Opción B: intentar clipboard (funciona si la app tiene foco)
+  if(navigator.clipboard && window.isSecureContext){
+    try{
+      const txt = await navigator.clipboard.readText();
+      if(txt && txt.includes('SYSCORP')) return txt;
+    }catch(e){
+      // Permiso denegado — mostrar modal de pegado manual
+    }
+  }
+  // Opción C: modal de pegado manual (Android fallback)
+  document.getElementById('ov-pegar').classList.add('open');
+  setTimeout(()=>{ const ta=$('ta-pegar'); if(ta){ta.focus();} }, 300);
+  throw new Error('CLIPBOARD_MODAL'); // señal para no mostrar error rojo
+}
+
 /* ▲▲ MAIN ▲▲ */
 async function doRun(){
   if(S.busy){log('wrn','Operación en curso');return;}
@@ -870,5 +995,22 @@ log('ok','SYSCORP Assistant · DIMA Parts — Android ready');
 log('inf','Flujo: Abrí SysCorp → ejecutá DIMA-PANEL → volvé → EJECUTAR');
 dot('ok','Listo');
 </script>
+
+<!-- MODAL PEGAR TSV — Android: el usuario pega manualmente -->
+<div class="ov" id="ov-pegar">
+  <div class="sh">
+    <h3>📋 Pegá los datos del panel</h3>
+    <p>En SysCorp ejecutaste DIMA-PANEL y copiaste los datos. <b>Pegá acá con toque largo → Pegar:</b></p>
+    <textarea id="ta-pegar" 
+      style="width:100%;height:140px;background:var(--bg);border:1px solid var(--br2);border-radius:var(--rm);padding:12px;color:var(--gr);font-family:var(--mono);font-size:11px;resize:none;-webkit-user-select:text;user-select:text;touch-action:manipulation"
+      placeholder="Tocá acá → mantené presionado → Pegar..."></textarea>
+    <div class="android-tip" style="margin-top:10px"><b>💡 SI NO PODÉS PEGAR:</b>Primero tocá dentro del cuadro de texto, luego mantené presionado hasta que aparezca el menú y elegí "Pegar".</div>
+    <div class="sh2" style="margin-top:12px">
+      <button class="btn gr" onclick="procesarTSVPegado()">✓ Procesar</button>
+      <button class="btn" onclick="document.getElementById('ov-pegar').classList.remove('open')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
