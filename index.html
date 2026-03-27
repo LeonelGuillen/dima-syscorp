@@ -137,7 +137,8 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px
   <div class="chdr">Operación <span class="badge bg" id="mbadge">EXTRAER</span></div>
   <div class="chips">
     <div class="chip ext" id="ch-ext" onclick="setOp('ext')">◀ Extraer</div>
-    <div class="chip" id="ch-sub" onclick="setOp('sub')">▶ Subir precios</div>
+    <div class="chip" id="ch-sub" onclick="setOp('sub')">
+    <div class="chip" id="ch-auto" onclick="setOp('auto')">⚡ Auto-Detalle</div>▶ Subir precios</div>
   </div>
   <div class="g2" style="padding:0 10px 10px">
     <button class="btn gr full" id="btn-run" onclick="doRun()">▶ EJECUTAR</button>
@@ -280,8 +281,9 @@ function setOp(op){
   S.op=op;
   $('ch-ext').className='chip'+(op==='ext'?' ext':'');
   $('ch-sub').className='chip'+(op==='sub'?' sub':'');
-  $('mbadge').textContent=op==='ext'?'EXTRAER':'SUBIR';
-  $('mbadge').className='badge '+(op==='ext'?'bg':'bb');
+  if($('ch-auto'))$('ch-auto').className='chip'+(op==='auto'?' ext':'');
+  $('mbadge').textContent=op==='ext'?'EXTRAER':op==='auto'?'AUTO-DETALLE':'SUBIR';
+  $('mbadge').className='badge '+(op==='ext'||op==='auto'?'bg':'bb');
 }
 function openSheet(t){try{window.open('https://docs.google.com/spreadsheets/d/'+(t==='W'?C.SW:C.SR),'_blank');}catch(e){}}
 function openSysCorpPanel(){try{window.open(C.BASE+C.PANEL,'_blank');}catch(e){}}
@@ -771,9 +773,13 @@ async function doSubir(){
 }
 
 /* ══ MAIN ══ */
+
+async function extraerDetalleCot(id,cid,fecha){const win=window.open(C.BASE+C.APPLY+'?q='+encodeURIComponent(id)+'&c='+encodeURIComponent(cid),'_det_'+id,'width=1024,height=700');if(!win)throw new Error('Popup bloqueado');await new Promise((res,rej)=>{const t=setTimeout(()=>{win.close();rej(new Error('Timeout'));},25000);const iv=setInterval(()=>{try{if(win.closed){clearInterval(iv);clearTimeout(t);rej(new Error('Cerrada'));return;}if(win.document.querySelectorAll('tr[data-index]').length>0&&win.document.readyState==='complete'){clearInterval(iv);clearTimeout(t);res();}}catch(e){}},400);});function gl(t){const e=[...win.document.querySelectorAll('label')].find(e=>e.innerText.trim().replace(/:| /g,'').toLowerCase()===t.toLowerCase());return e&&e.nextElementSibling?e.nextElementSibling.innerText.trim():'';}const sol=gl('Solicitud')||String(id),comp=gl('Compañia')||gl('Compania'),caso=gl('Siniestro')||gl('Caso'),placa=(gl('Placa')||'').replace(/^P\s*-\s*/,'').replace(/^CL\s*-\s*/,'CL-').trim(),marca=gl('Marca'),modelo=gl('Modelo'),anio=gl('Año')||gl('Ano'),vin=gl('VIN'),taller=gl('Taller');const qM={'':'NA','1':'ORIGINAL','2':'GENERICO','3':'USADO'},tM={'1':'Suministro','2':'Repuesto'};const f=[...win.document.querySelectorAll('tr[data-index]')].map(tr=>{const tds=[...tr.querySelectorAll('td')];const slT=tr.querySelector('#slType'),slQ=tr.querySelector('#slTypesQuotation'),dtP=tr.querySelector('#dtPrice'),dtD=tr.querySelector('#dtDays'),dtPc=tr.querySelector('#dtPercent'),cb=tr.querySelector('input[type=checkbox]');return[fecha,'SYSCORP',sol,comp,caso,placa,marca,modelo,anio,vin||'','','',taller,tds[0]?tds[0].innerText.trim():'',tds[1]?tds[1].innerText.trim():'',slT?qM[slT.value]||'':'',slQ?tM[slQ.value]||'':'','1',dtP?dtP.value:'',dtD?dtD.value:'',dtPc?dtPc.value:'',cb?(cb.checked?'SI':'NO'):'','','','',String(id)+'|'+String(cid)];});win.close();return f;}
+async function doAutoDetalle(){S.busy=true;dot('busy','Auto…');$('btn-run').disabled=true;log('inf','━━ AUTO-DETALLE ━━');prog(5,'Leyendo…');try{if(!navigator.clipboard)throw new Error('Sin Clipboard API');const txt=await navigator.clipboard.readText();if(!txt.trim()||!txt.includes('SYSCORP')){log('wrn','Ejecutá DIMA-PANEL primero');dot('ok','Esperando');prog(0,'—');return;}const cots=parseTSV(txt);if(!cots.length){log('err','Sin cotizaciones');prog(0,'Error');return;}S.recs=cots;renderCots(cots);let nv=cots.filter(c=>((c.Code||'').includes('Reabierto'))||!S.idx.has(String(c.Id)));log('inf','Total:'+cots.length+' Nuevas:'+nv.length);if(!nv.length){log('ok','Al día — todo procesado');prog(100,'Al día');dot('ok','Al día');return;}if(nv.length>C.MAX_E){S.queue=nv.slice(C.MAX_E).map(c=>String(c.Id));nv=nv.slice(0,C.MAX_E);log('wrn','Límite '+C.MAX_E+': '+nv.length+' ahora, '+S.queue.length+' en cola');}log('inf','Procesando '+nv.length+' cotizaciones (habilitá popups syscorpla.com)');const fch=new Date().toLocaleDateString('es-CR',{timeZone:'America/Costa_Rica',day:'2-digit',month:'2-digit',year:'numeric'});const all=[];for(let i=0;i<nv.length;i++){const c=nv[i];prog(10+Math.round(i/nv.length*80),'('+(i+1)+'/'+nv.length+') '+c.Code);log('inf','↓ '+(i+1)+'/'+nv.length+' '+c.Code+' '+c.Vehicle.Brand+' '+c.Vehicle.Model);try{const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...f);S.idx.add(String(c.Id));S.ext++;log('ok','✓ '+c.Code+' → '+f.length+' partes');await new Promise(r=>setTimeout(r,600));}catch(e){S.err++;log('err','✗ '+c.Code+': '+e.message+' reintentando');try{await new Promise(r=>setTimeout(r,2000));const f=await extraerDetalleCot(c.Id,c.CompanyId,fch);all.push(...f);S.idx.add(String(c.Id));S.ext++;log('ok','✓ OK '+c.Code);}catch(e2){log('err','✗ Falló: '+c.Code);}}}if(!all.length){log('err','Sin filas');prog(0,'Error');return;}const tsv=all.map(r=>r.map(v=>(v==null?'':String(v)).replace(/[\t\r\n]/g,' ')).join('\t')).join('\n');const ok=await copiarTexto(tsv);guardarIdx();$('tsv-tit').textContent=ok?'✓ TSV COPIADO':'TSV GENERADO';$('tsv-desc').textContent=nv.length+' cots, '+all.length+' partes. '+(ok?'Abrí Sheet → primera celda vacía → Ctrl+V → Pegar.':'Copiá manualmente.')+(S.queue.length?' ⚠ Quedan '+S.queue.length+' → ejecutá de nuevo.':'');$('ov-tsv').classList.add('open');prog(100,all.length+' partes');dot('ok',S.ext+' extraídas');log('ok','━━ FIN: '+nv.length+' cots '+all.length+' partes '+S.err+' err ━━');if(S.queue.length)log('wrn','⚠ Quedan '+S.queue.length+' → ejecutá de nuevo');}catch(e){S.err++;log('err',e.message);dot('err','Error');prog(0,'Error');}finally{S.busy=false;$('btn-run').disabled=false;ui();}}
 async function doRun(){
   if(S.busy){log('wrn','Operación en curso');return;}
   if(S.op==='ext')await doExtraer();
+  else if(S.op==='auto')await doAutoDetalle();
   else await doSubir();
 }
 
