@@ -269,6 +269,7 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:15px
       <button class="btn pu full" onclick="openSheet('R');document.getElementById('ov-menu').classList.remove('open')">↗ SHEET SUBIR</button>
       <button class="btn rd" onclick="document.getElementById('ov-rst').classList.add('open');document.getElementById('ov-menu').classList.remove('open')">⌫ RESET ÍNDICE</button>
     </div>
+    <button class="btn am full" onclick="var ta=document.getElementById('ta-bm');if(ta)ta.value='javascript:(function(){var d;try{d=jQuery(\'#tbRecently\').bootstrapTable(\'getData\');}catch(e){alert(\'Abre el Panel de Cotizaciones primero\');return;}if(!d||!d.length){alert(\'Sin cotizaciones en el panel\');return;}var f=new Date().toLocaleDateString(\'es-CR\',{timeZone:\'America/Costa_Rica\',day:\'2-digit\',month:\'2-digit\',year:\'numeric\'});function cp(p){return(p||\'\').replace(/^P\\s*-\\s*/,\'\').replace(/^CL\\s*-\\s*/,\'CL-\').trim();}function pd(s){if(!s)return\'\';if(s.indexOf(\'Date(\')>-1){var m=parseInt(s.match(/-?\\d+/)[0]);return m<=0?\'\':new Date(m).toLocaleDateString(\'es-CR\',{timeZone:\'America/Costa_Rica\',day:\'2-digit\',month:\'2-digit\',year:\'numeric\'});}return s;}var rows=d.map(function(r){var v=r.Vehicle||{};return[f,\'SYSCORP\',r.Code||String(r.Id),r.strCompany||\'\',r.SinisterId||\'\',cp(r.LicensePlate),v.Brand||\'\',v.Model||\'\',String(v.Year||\'\'),v.VIN||r.VIN||\'\',r.StartDate||\'\',pd(r.CloseDate||\'\'),(r.BodyShop&&r.BodyShop.Name)||\'\',\'\',\'\',\'\',\'\',\'1\',\'\',\'\',\'\',\'\',\'\',\'\',\'\',String(r.Id)+\'|\'+String(r.CompanyId)];});var tsv=rows.map(function(r){return r.map(function(v){return(v==null?\'\':String(v)).replace(/[\\t\\r\\n]/g,\' \');}).join(\'\\t\');}).join(\'\\n\');if(navigator.clipboard){navigator.clipboard.writeText(tsv).then(function(){var t=document.createElement(\'div\');t.style=\'position:fixed;top:20px;right:20px;background:#00d68f;color:#000;padding:14px 22px;border-radius:10px;font-weight:bold;z-index:99999;font-size:15px\';t.textContent=\'\\u2713 \'+rows.length+\' cotizaciones copiadas\';document.body.appendChild(t);setTimeout(function(){t.remove();},3000);});}else{var ta=document.createElement(\'textarea\');ta.value=tsv;ta.style=\'position:fixed;top:0;left:0;opacity:.01\';document.body.appendChild(ta);ta.select();document.execCommand(\'copy\');ta.remove();alert(\'\\u2713 \'+rows.length+\' cotizaciones copiadas\');}})();';document.getElementById('ov-bm').classList.add('open');document.getElementById('ov-menu').classList.remove('open')">Codigo DIMA-PANEL</button>
     <button class="btn" onclick="document.getElementById('ov-menu').classList.remove('open')">Cerrar</button>
   </div>
 </div>
@@ -1002,5 +1003,17 @@ dot('ok','Listo');
   </div>
 </div>
 
+
+<div class="ov" id="ov-bm">
+  <div class="sh">
+    <h3>Codigo DIMA-PANEL</h3>
+    <p>Guarda esto como <b>favorito</b> en Chrome con nombre <b>DIMA-PANEL</b>.</p>
+    <div class="android-tip"><b>ANDROID — CONFIGURACION (una sola vez):</b>1. Anda a syscorpla.com/Cotizaciones/Panel<br>2. Toca el icono de estrella para guardar como favorito<br>3. Menu Chrome (3 puntos) Favoritos, toque largo en DIMA-PANEL, Editar favorito<br>4. Borra la URL y pega el codigo de abajo, Guardar<br><br><b>USO DIARIO:</b> Panel de SysCorp abierto, Menu Chrome, Favoritos, toca DIMA-PANEL, aparece toast verde, vuelve a la app DIMA, toca EJECUTAR</div>
+    <p style="margin:8px 0 4px;font-size:11px;color:var(--am);font-family:var(--mono)">TOCA EL CODIGO PARA COPIAR:</p>
+    <textarea id="ta-bm" onclick="this.select();if(navigator.clipboard){navigator.clipboard.writeText(this.value).then(function(){var b=document.getElementById('bm-badge');if(b){b.textContent='COPIADO';b.className='badge bg';setTimeout(function(){b.textContent='TOCAR PARA COPIAR';b.className='badge ba';},2500);}});}" readonly style="width:100%;height:90px;background:var(--bg);border:1px solid rgba(0,214,143,.4);border-radius:var(--rm);color:var(--gr);font-family:var(--mono);font-size:9px;padding:8px;resize:none;-webkit-user-select:all;user-select:all;touch-action:manipulation;line-height:1.4;outline:none;cursor:pointer"></textarea>
+    <div style="text-align:center;margin:4px 0 12px"><span id="bm-badge" class="badge ba">TOCAR PARA COPIAR</span></div>
+    <button class="btn" onclick="document.getElementById('ov-bm').classList.remove('open')">Cerrar</button>
+  </div>
+</div>
 </body>
 </html>
